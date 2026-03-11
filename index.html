@@ -941,6 +941,15 @@ const LESSONS = [
           {q:'ツァ',a:'tsa',hint:'ツ+ァ'},
         ]
       },
+      { id:'kata-combo', name:'Combination Sounds · 拗音', jp:'キャ・シャ・チャ…', type:'katakana', prompt:'romaji', desc:'Small ャ・ュ・ョ combinations',
+        data:[
+          {q:'キャ',a:'kya',hint:'キ+ャ'},{q:'キュ',a:'kyu',hint:'キ+ュ'},{q:'キョ',a:'kyo',hint:'キ+ョ'},
+          {q:'シャ',a:'sha',hint:'シ+ャ'},{q:'シュ',a:'shu',hint:'シ+ュ'},{q:'ショ',a:'sho',hint:'シ+ョ'},
+          {q:'チャ',a:'cha',hint:'チ+ャ'},{q:'チュ',a:'chu',hint:'チ+ュ'},{q:'チョ',a:'cho',hint:'チ+ョ'},
+          {q:'ニャ',a:'nya',hint:'ニ+ャ'},{q:'ニュ',a:'nyu',hint:'ニ+ュ'},{q:'ニョ',a:'nyo',hint:'ニ+ョ'},
+          {q:'ヒャ',a:'hya',hint:'ヒ+ャ'},{q:'ミャ',a:'mya',hint:'ミ+ャ'},{q:'リョ',a:'ryo',hint:'リ+ョ'},
+        ]
+      },
     ]
   },
 
@@ -1026,7 +1035,6 @@ const LESSONS = [
       },
     ]
   },
-];
 
   // ── JBP BOOK 1 · UNIT 1: Greetings & Introductions ──
   { book:'jbp', category:'JBP Book 1 · Unit 1', catJP:'はじめまして', catIcon:'会',
@@ -1209,6 +1217,212 @@ const LESSONS = [
           {q:'かいてください',a:'Please write it',hint:'kaite kudasai'},
           {q:'〜ています',a:'is [verb]-ing / currently doing',hint:'~ te imasu'},
           {q:'〜ていません',a:'is not [verb]-ing',hint:'~ te imasen'},
+        ]
+      },
+    ]
+  },
+  // ── JBP BOOK 1 · UNIT 6: Adjectives ──
+  { book:'jbp', category:'JBP Book 1 · Unit 6', catJP:'おおきいです', catIcon:'形',
+    catDesc:'Describing things with い-adjectives and な-adjectives',
+    items:[
+      { id:'jbp1u6-iadj', name:'Lesson 16 · い-Adjectives', jp:'い-けいようし', type:'grammar', prompt:'meaning', desc:'Descriptive い-adjective patterns',
+        data:[
+          {q:'おおきいです',a:'is big / large',hint:'ookii desu'},
+          {q:'ちいさいです',a:'is small / little',hint:'chiisai desu'},
+          {q:'たかいです',a:'is expensive / tall',hint:'takai desu'},
+          {q:'やすいです',a:'is cheap / inexpensive',hint:'yasui desu'},
+          {q:'あたらしいです',a:'is new',hint:'atarashii desu'},
+          {q:'ふるいです',a:'is old (things)',hint:'furui desu'},
+          {q:'おいしいです',a:'is delicious',hint:'oishii desu'},
+          {q:'あついです',a:'is hot (weather/things)',hint:'atsui desu'},
+          {q:'さむいです',a:'is cold (weather)',hint:'samui desu'},
+          {q:'いそがしいです',a:'is busy',hint:'isogashii desu'},
+          {q:'おもしろいです',a:'is interesting / funny',hint:'omoshiroi desu'},
+          {q:'つまらないです',a:'is boring',hint:'tsumaranai desu'},
+          {q:'おおきくないです',a:'is not big (negative)',hint:'ookiku nai desu'},
+          {q:'たかくなかったです',a:'was not expensive (past negative)',hint:'takaku nakatta desu'},
+        ]
+      },
+      { id:'jbp1u6-naadj', name:'Lesson 17 · な-Adjectives', jp:'な-けいようし', type:'grammar', prompt:'meaning', desc:'な-adjective patterns and descriptions',
+        data:[
+          {q:'しずかです',a:'is quiet / peaceful',hint:'shizuka desu'},
+          {q:'にぎやかです',a:'is lively / bustling',hint:'nigiyaka desu'},
+          {q:'きれいです',a:'is pretty / clean',hint:'kirei desu'},
+          {q:'ゆうめいです',a:'is famous',hint:'yuumei desu'},
+          {q:'べんりです',a:'is convenient',hint:'benri desu'},
+          {q:'ふべんです',a:'is inconvenient',hint:'fuben desu'},
+          {q:'げんきです',a:'is healthy / energetic',hint:'genki desu'},
+          {q:'ひまです',a:'is free (not busy)',hint:'hima desu'},
+          {q:'たいへんです',a:'is tough / terrible',hint:'taihen desu'},
+          {q:'だいじょうぶです',a:'is all right / fine',hint:'daijoubu desu'},
+          {q:'しずかじゃありません',a:'is not quiet (negative)',hint:'shizuka ja arimasen'},
+          {q:'きれいでした',a:'was pretty (past)',hint:'kirei deshita'},
+          {q:'とてもきれいです',a:'is very pretty',hint:'totemo kirei desu'},
+          {q:'あまりしずかじゃありません',a:'is not very quiet',hint:'amari shizuka ja arimasen'},
+        ]
+      },
+    ]
+  },
+  // ── JBP BOOK 1 · UNIT 7: Existence & Location ──
+  { book:'jbp', category:'JBP Book 1 · Unit 7', catJP:'あります・います', catIcon:'在',
+    catDesc:'Expressing existence and describing locations',
+    items:[
+      { id:'jbp1u7-existence', name:'Lesson 18 · Existence Verbs', jp:'あります・います', type:'grammar', prompt:'meaning', desc:'Existence verbs for things and living beings',
+        data:[
+          {q:'あります',a:'there is / exists (inanimate)',hint:'arimasu'},
+          {q:'います',a:'there is / exists (animate)',hint:'imasu'},
+          {q:'ありません',a:'there is not (inanimate)',hint:'arimasen'},
+          {q:'いません',a:'there is not (animate)',hint:'imasen'},
+          {q:'〜にあります',a:'is located at [place] (things)',hint:'~ ni arimasu'},
+          {q:'〜にいます',a:'is at [place] (people/animals)',hint:'~ ni imasu'},
+          {q:'〜のうえに',a:'on top of [X]',hint:'~ no ue ni'},
+          {q:'〜のしたに',a:'under / below [X]',hint:'~ no shita ni'},
+          {q:'〜のなかに',a:'inside [X]',hint:'~ no naka ni'},
+          {q:'〜のそばに',a:'near / beside [X]',hint:'~ no soba ni'},
+          {q:'〜のまえに',a:'in front of [X]',hint:'~ no mae ni'},
+          {q:'〜のうしろに',a:'behind [X]',hint:'~ no ushiro ni'},
+          {q:'〜のとなりに',a:'next to [X]',hint:'~ no tonari ni'},
+          {q:'なにがありますか',a:'What is there?',hint:'nani ga arimasu ka'},
+        ]
+      },
+      { id:'jbp1u7-location', name:'Lesson 19 · Location Words', jp:'ばしょのことば', type:'vocab', prompt:'meaning', desc:'Location and position vocabulary',
+        data:[
+          {q:'うえ',a:'above / on top',hint:'ue'},{q:'した',a:'below / under',hint:'shita'},
+          {q:'なか',a:'inside / middle',hint:'naka'},{q:'そと',a:'outside',hint:'soto'},
+          {q:'まえ',a:'front / before',hint:'mae'},{q:'うしろ',a:'behind / back',hint:'ushiro'},
+          {q:'みぎ',a:'right',hint:'migi'},{q:'ひだり',a:'left',hint:'hidari'},
+          {q:'となり',a:'next to / neighboring',hint:'tonari'},
+          {q:'ちかく',a:'nearby / close',hint:'chikaku'},
+          {q:'あいだ',a:'between / interval',hint:'aida'},
+          {q:'へや',a:'room',hint:'heya'},
+          {q:'にわ',a:'garden',hint:'niwa'},
+          {q:'テーブル',a:'table',hint:'teeburu'},
+        ]
+      },
+    ]
+  },
+  // ── JBP BOOK 1 · UNIT 8: Counting & Shopping ──
+  { book:'jbp', category:'JBP Book 1 · Unit 8', catJP:'いくつですか', catIcon:'数',
+    catDesc:'Counter words, quantities, and shopping phrases',
+    items:[
+      { id:'jbp1u8-counters', name:'Lesson 20 · Counters', jp:'じょすうし', type:'vocab', prompt:'meaning', desc:'Counter words for different objects',
+        data:[
+          {q:'ひとつ',a:'one (general counter)',hint:'hitotsu'},
+          {q:'ふたつ',a:'two (general counter)',hint:'futatsu'},
+          {q:'みっつ',a:'three (general counter)',hint:'mittsu'},
+          {q:'よっつ',a:'four (general counter)',hint:'yottsu'},
+          {q:'いつつ',a:'five (general counter)',hint:'itsutsu'},
+          {q:'むっつ',a:'six (general counter)',hint:'muttsu'},
+          {q:'ななつ',a:'seven (general counter)',hint:'nanatsu'},
+          {q:'やっつ',a:'eight (general counter)',hint:'yattsu'},
+          {q:'ここのつ',a:'nine (general counter)',hint:'kokonotsu'},
+          {q:'とお',a:'ten (general counter)',hint:'too'},
+          {q:'〜まい',a:'counter for flat things',hint:'~ mai'},
+          {q:'〜ほん',a:'counter for long/thin things',hint:'~ hon'},
+          {q:'〜さつ',a:'counter for books',hint:'~ satsu'},
+          {q:'いくつ',a:'how many?',hint:'ikutsu'},
+        ]
+      },
+      { id:'jbp1u8-shopping', name:'Lesson 21 · Shopping', jp:'かいもの', type:'vocab', prompt:'meaning', desc:'Shopping phrases and expressions',
+        data:[
+          {q:'いらっしゃいませ',a:'Welcome (shop greeting)',hint:'irasshaimase'},
+          {q:'これをください',a:'Please give me this',hint:'kore o kudasai'},
+          {q:'いくらですか',a:'How much is it?',hint:'ikura desu ka'},
+          {q:'たかいですね',a:'That is expensive',hint:'takai desu ne'},
+          {q:'もっとやすいのはありますか',a:'Do you have something cheaper?',hint:'motto yasui no wa arimasu ka'},
+          {q:'カードでいいですか',a:'Is a card OK?',hint:'kaado de ii desu ka'},
+          {q:'おつりです',a:'Here is your change',hint:'otsuri desu'},
+          {q:'レシート',a:'receipt',hint:'reshiito'},
+          {q:'ふくろはいりますか',a:'Do you need a bag?',hint:'fukuro wa irimasu ka'},
+          {q:'みせてください',a:'Please show me',hint:'misete kudasai'},
+          {q:'ちょっとまってください',a:'Please wait a moment',hint:'chotto matte kudasai'},
+          {q:'けっこうです',a:'No thank you / That is fine',hint:'kekkou desu'},
+          {q:'すみません、これは？',a:'Excuse me, what about this?',hint:'sumimasen, kore wa?'},
+          {q:'ありがとうございました',a:'Thank you very much (past)',hint:'arigatou gozaimashita'},
+        ]
+      },
+    ]
+  },
+  // ── JBP BOOK 1 · UNIT 9: Family & People ──
+  { book:'jbp', category:'JBP Book 1 · Unit 9', catJP:'かぞく', catIcon:'族',
+    catDesc:'Family members, describing people, and age',
+    items:[
+      { id:'jbp1u9-family', name:'Lesson 22 · Family', jp:'かぞくのことば', type:'vocab', prompt:'meaning', desc:'Family member terms (humble and polite)',
+        data:[
+          {q:'かぞく',a:'family',hint:'kazoku'},
+          {q:'ちち',a:'(my) father',hint:'chichi'},
+          {q:'はは',a:'(my) mother',hint:'haha'},
+          {q:'おとうさん',a:'father (polite / someone else\'s)',hint:'otousan'},
+          {q:'おかあさん',a:'mother (polite / someone else\'s)',hint:'okaasan'},
+          {q:'あに',a:'(my) older brother',hint:'ani'},
+          {q:'あね',a:'(my) older sister',hint:'ane'},
+          {q:'おにいさん',a:'older brother (polite)',hint:'oniisan'},
+          {q:'おねえさん',a:'older sister (polite)',hint:'oneesan'},
+          {q:'おとうと',a:'younger brother',hint:'otouto'},
+          {q:'いもうと',a:'younger sister',hint:'imouto'},
+          {q:'しゅじん',a:'(my) husband',hint:'shujin'},
+          {q:'かない',a:'(my) wife',hint:'kanai'},
+          {q:'こども',a:'child / children',hint:'kodomo'},
+        ]
+      },
+      { id:'jbp1u9-people', name:'Lesson 23 · Describing People', jp:'ひとのようす', type:'grammar', prompt:'meaning', desc:'Describing appearance and traits',
+        data:[
+          {q:'せがたかいです',a:'is tall (person)',hint:'se ga takai desu'},
+          {q:'せがひくいです',a:'is short (person)',hint:'se ga hikui desu'},
+          {q:'かみがながいです',a:'has long hair',hint:'kami ga nagai desu'},
+          {q:'かみがみじかいです',a:'has short hair',hint:'kami ga mijikai desu'},
+          {q:'めがねをかけています',a:'wears glasses',hint:'megane o kakete imasu'},
+          {q:'わかいです',a:'is young',hint:'wakai desu'},
+          {q:'やさしいです',a:'is kind / gentle',hint:'yasashii desu'},
+          {q:'なんさいですか',a:'How old are you?',hint:'nansai desu ka'},
+          {q:'〜さいです',a:'is [X] years old',hint:'~ sai desu'},
+          {q:'なんにんかぞくですか',a:'How many in your family?',hint:'nannin kazoku desu ka'},
+          {q:'〜にんです',a:'there are [X] people',hint:'~ nin desu'},
+          {q:'ひとり',a:'one person',hint:'hitori'},
+          {q:'ふたり',a:'two people',hint:'futari'},
+          {q:'おおぜい',a:'many people / a crowd',hint:'oozei'},
+        ]
+      },
+    ]
+  },
+  // ── JBP BOOK 1 · UNIT 10: Past Experiences & Invitations ──
+  { book:'jbp', category:'JBP Book 1 · Unit 10', catJP:'〜たことがあります', catIcon:'験',
+    catDesc:'Past experiences, invitations, and making plans',
+    items:[
+      { id:'jbp1u10-experience', name:'Lesson 24 · Past Experiences', jp:'けいけん', type:'grammar', prompt:'meaning', desc:'Talking about things you have done',
+        data:[
+          {q:'〜たことがあります',a:'have [verb]-ed before / have the experience of',hint:'~ ta koto ga arimasu'},
+          {q:'〜たことがありません',a:'have never [verb]-ed',hint:'~ ta koto ga arimasen'},
+          {q:'にほんにいったことがありますか',a:'Have you been to Japan?',hint:'nihon ni itta koto ga arimasu ka'},
+          {q:'すしをたべたことがあります',a:'I have eaten sushi before',hint:'sushi o tabeta koto ga arimasu'},
+          {q:'いちどもありません',a:'not even once / never',hint:'ichido mo arimasen'},
+          {q:'いちど',a:'once / one time',hint:'ichido'},
+          {q:'にど',a:'twice / two times',hint:'nido'},
+          {q:'なんかいも',a:'many times',hint:'nankai mo'},
+          {q:'もう〜ました',a:'already did [verb]',hint:'mou ~ mashita'},
+          {q:'まだ〜ていません',a:'have not [verb]-ed yet',hint:'mada ~ te imasen'},
+          {q:'〜たり〜たりします',a:'do things like [X] and [Y]',hint:'~ tari ~ tari shimasu'},
+          {q:'やすみのひ',a:'day off / holiday',hint:'yasumi no hi'},
+          {q:'りょこう',a:'travel / trip',hint:'ryokou'},
+          {q:'けいけん',a:'experience',hint:'keiken'},
+        ]
+      },
+      { id:'jbp1u10-plans', name:'Lesson 25 · Invitations & Plans', jp:'さそう・やくそく', type:'grammar', prompt:'meaning', desc:'Making invitations and plans',
+        data:[
+          {q:'〜ませんか',a:'Won\'t you [verb]? (invitation)',hint:'~ masen ka'},
+          {q:'〜ましょう',a:'Let\'s [verb] (suggestion)',hint:'~ mashou'},
+          {q:'〜ましょうか',a:'Shall we [verb]?',hint:'~ mashou ka'},
+          {q:'いいですね',a:'That sounds good',hint:'ii desu ne'},
+          {q:'ざんねんですが',a:'Unfortunately / I\'m sorry but',hint:'zannen desu ga'},
+          {q:'ちょっとつごうがわるいです',a:'It is a bit inconvenient (declining)',hint:'chotto tsugou ga warui desu'},
+          {q:'いつがいいですか',a:'When is good?',hint:'itsu ga ii desu ka'},
+          {q:'どこであいましょうか',a:'Where shall we meet?',hint:'doko de aimashou ka'},
+          {q:'〜にしましょう',a:'Let\'s make it [time/place]',hint:'~ ni shimashou'},
+          {q:'たのしみにしています',a:'I am looking forward to it',hint:'tanoshimi ni shite imasu'},
+          {q:'えいがをみませんか',a:'Would you like to watch a movie?',hint:'eiga o mimasen ka'},
+          {q:'いっしょにいきましょう',a:'Let\'s go together',hint:'issho ni ikimashou'},
+          {q:'またこんど',a:'maybe next time',hint:'mata kondo'},
+          {q:'やくそく',a:'promise / appointment',hint:'yakusoku'},
         ]
       },
     ]
