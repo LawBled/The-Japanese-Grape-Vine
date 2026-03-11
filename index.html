@@ -722,7 +722,8 @@ body {
     </div>
     <div class="section-title">Study Books</div>
     <div style="display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap" id="bookTabRow">
-      <button id="tabAll" onclick="filterBook('all')" style="font-family:'Inconsolata',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.45rem 1rem;border:1.5px solid #12100e;background:#12100e;color:#f7f2ea;cursor:pointer;border-radius:2px">All Books</button>
+      <button id="tabAll" onclick="filterBook('all')" style="font-family:'Inconsolata',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.45rem 1rem;border:1.5px solid #12100e;background:#12100e;color:#f7f2ea;cursor:pointer;border-radius:2px">All</button>
+      <button id="tabScripts" onclick="filterBook('scripts')" style="font-family:'Inconsolata',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.45rem 1rem;border:1.5px solid #d8cfc0;background:transparent;color:#7a7060;cursor:pointer;border-radius:2px">Hiragana · Katakana · Kanji</button>
       <button id="tabJBP" onclick="filterBook('jbp')" style="font-family:'Inconsolata',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.45rem 1rem;border:1.5px solid #d8cfc0;background:transparent;color:#7a7060;cursor:pointer;border-radius:2px">Japanese for Busy People</button>
       <button id="tabKJW" onclick="filterBook('kjw')" style="font-family:'Inconsolata',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.45rem 1rem;border:1.5px solid #d8cfc0;background:transparent;color:#7a7060;cursor:pointer;border-radius:2px">The Kanji Way</button>
     </div>
@@ -758,6 +759,275 @@ body {
 //  DATA  — textbook-style lessons
 // ══════════════════════════════════════════════
 const LESSONS = [
+  // ══════════════════════════════════════════════
+  // SCRIPTS — Hiragana, Katakana, Kanji
+  // ══════════════════════════════════════════════
+
+  // ── Hiragana ──
+  { book:'scripts', category:'Hiragana · Basic', catJP:'ひらがな基礎', catIcon:'あ',
+    catDesc:'The 46 basic hiragana characters — vowels and core consonants',
+    items:[
+      { id:'hira-vowels', name:'Vowels', jp:'ぼいん — あいうえお', type:'hiragana', prompt:'romaji', desc:'The 5 core vowels',
+        data:[
+          {q:'あ',a:'a',hint:'vowel row'},{q:'い',a:'i',hint:'vowel row'},
+          {q:'う',a:'u',hint:'vowel row'},{q:'え',a:'e',hint:'vowel row'},
+          {q:'お',a:'o',hint:'vowel row'},
+        ]
+      },
+      { id:'hira-ka-row', name:'K-row · か行', jp:'か・き・く・け・こ', type:'hiragana', prompt:'romaji', desc:'The ka-ki-ku-ke-ko row',
+        data:[
+          {q:'か',a:'ka',hint:'か行'},{q:'き',a:'ki',hint:'か行'},{q:'く',a:'ku',hint:'か行'},
+          {q:'け',a:'ke',hint:'か行'},{q:'こ',a:'ko',hint:'か行'},
+        ]
+      },
+      { id:'hira-sa-row', name:'S-row · さ行', jp:'さ・し・す・せ・そ', type:'hiragana', prompt:'romaji', desc:'The sa-shi-su-se-so row',
+        data:[
+          {q:'さ',a:'sa',hint:'さ行'},{q:'し',a:'shi',hint:'さ行'},{q:'す',a:'su',hint:'さ行'},
+          {q:'せ',a:'se',hint:'さ行'},{q:'そ',a:'so',hint:'さ行'},
+        ]
+      },
+      { id:'hira-ta-row', name:'T-row · た行', jp:'た・ち・つ・て・と', type:'hiragana', prompt:'romaji', desc:'The ta-chi-tsu-te-to row',
+        data:[
+          {q:'た',a:'ta',hint:'た行'},{q:'ち',a:'chi',hint:'た行'},{q:'つ',a:'tsu',hint:'た行'},
+          {q:'て',a:'te',hint:'た行'},{q:'と',a:'to',hint:'た行'},
+        ]
+      },
+      { id:'hira-na-row', name:'N-row · な行', jp:'な・に・ぬ・ね・の', type:'hiragana', prompt:'romaji', desc:'The na-ni-nu-ne-no row',
+        data:[
+          {q:'な',a:'na',hint:'な行'},{q:'に',a:'ni',hint:'な行'},{q:'ぬ',a:'nu',hint:'な行'},
+          {q:'ね',a:'ne',hint:'な行'},{q:'の',a:'no',hint:'な行'},
+        ]
+      },
+      { id:'hira-ha-row', name:'H-row · は行', jp:'は・ひ・ふ・へ・ほ', type:'hiragana', prompt:'romaji', desc:'The ha-hi-fu-he-ho row',
+        data:[
+          {q:'は',a:'ha',hint:'は行'},{q:'ひ',a:'hi',hint:'は行'},{q:'ふ',a:'fu',hint:'は行'},
+          {q:'へ',a:'he',hint:'は行'},{q:'ほ',a:'ho',hint:'は行'},
+        ]
+      },
+      { id:'hira-ma-row', name:'M-row · ま行', jp:'ま・み・む・め・も', type:'hiragana', prompt:'romaji', desc:'The ma-mi-mu-me-mo row',
+        data:[
+          {q:'ま',a:'ma',hint:'ま行'},{q:'み',a:'mi',hint:'ま行'},{q:'む',a:'mu',hint:'ま行'},
+          {q:'め',a:'me',hint:'ま行'},{q:'も',a:'mo',hint:'ま行'},
+        ]
+      },
+      { id:'hira-ya-wa-row', name:'Y & W rows · や・わ行', jp:'や行・わ行・ん', type:'hiragana', prompt:'romaji', desc:'Ya, wa rows and n',
+        data:[
+          {q:'や',a:'ya',hint:'や行'},{q:'ゆ',a:'yu',hint:'や行'},{q:'よ',a:'yo',hint:'や行'},
+          {q:'ら',a:'ra',hint:'ら行'},{q:'り',a:'ri',hint:'ら行'},{q:'る',a:'ru',hint:'ら行'},
+          {q:'れ',a:'re',hint:'ら行'},{q:'ろ',a:'ro',hint:'ら行'},
+          {q:'わ',a:'wa',hint:'わ行'},{q:'を',a:'wo',hint:'わ行'},{q:'ん',a:'n',hint:'ん'},
+        ]
+      },
+    ]
+  },
+  { book:'scripts', category:'Hiragana · Dakuten', catJP:'ひらがな濁点・半濁点', catIcon:'が',
+    catDesc:'Voiced and semi-voiced hiragana — dakuten (゛) and handakuten (゜)',
+    items:[
+      { id:'hira-dak-g', name:'G-row · が行 (voiced k)', jp:'が・ぎ・ぐ・げ・ご', type:'hiragana', prompt:'romaji', desc:'Voiced k → g sounds',
+        data:[
+          {q:'が',a:'ga',hint:'゛on か'},{q:'ぎ',a:'gi',hint:'゛on き'},{q:'ぐ',a:'gu',hint:'゛on く'},
+          {q:'げ',a:'ge',hint:'゛on け'},{q:'ご',a:'go',hint:'゛on こ'},
+        ]
+      },
+      { id:'hira-dak-z', name:'Z-row · ざ行 (voiced s)', jp:'ざ・じ・ず・ぜ・ぞ', type:'hiragana', prompt:'romaji', desc:'Voiced s → z/j sounds',
+        data:[
+          {q:'ざ',a:'za',hint:'゛on さ'},{q:'じ',a:'ji',hint:'゛on し'},{q:'ず',a:'zu',hint:'゛on す'},
+          {q:'ぜ',a:'ze',hint:'゛on せ'},{q:'ぞ',a:'zo',hint:'゛on そ'},
+        ]
+      },
+      { id:'hira-dak-d', name:'D-row · だ行 (voiced t)', jp:'だ・ぢ・づ・で・ど', type:'hiragana', prompt:'romaji', desc:'Voiced t → d sounds',
+        data:[
+          {q:'だ',a:'da',hint:'゛on た'},{q:'ぢ',a:'ji',hint:'゛on ち'},{q:'づ',a:'zu',hint:'゛on つ'},
+          {q:'で',a:'de',hint:'゛on て'},{q:'ど',a:'do',hint:'゛on と'},
+        ]
+      },
+      { id:'hira-dak-b', name:'B & P rows · ば・ぱ行', jp:'ば行・ぱ行', type:'hiragana', prompt:'romaji', desc:'Voiced and semi-voiced h row',
+        data:[
+          {q:'ば',a:'ba',hint:'゛on は'},{q:'び',a:'bi',hint:'゛on ひ'},{q:'ぶ',a:'bu',hint:'゛on ふ'},
+          {q:'べ',a:'be',hint:'゛on へ'},{q:'ぼ',a:'bo',hint:'゛on ほ'},
+          {q:'ぱ',a:'pa',hint:'゜on は'},{q:'ぴ',a:'pi',hint:'゜on ひ'},{q:'ぷ',a:'pu',hint:'゜on ふ'},
+          {q:'ぺ',a:'pe',hint:'゜on へ'},{q:'ぽ',a:'po',hint:'゜on ほ'},
+        ]
+      },
+      { id:'hira-combo', name:'Combination Sounds · 拗音', jp:'きゃ・しゃ・ちゃ…', type:'hiragana', prompt:'romaji', desc:'Small や・ゆ・よ combinations',
+        data:[
+          {q:'きゃ',a:'kya',hint:'き+ゃ'},{q:'きゅ',a:'kyu',hint:'き+ゅ'},{q:'きょ',a:'kyo',hint:'き+ょ'},
+          {q:'しゃ',a:'sha',hint:'し+ゃ'},{q:'しゅ',a:'shu',hint:'し+ゅ'},{q:'しょ',a:'sho',hint:'し+ょ'},
+          {q:'ちゃ',a:'cha',hint:'ち+ゃ'},{q:'ちゅ',a:'chu',hint:'ち+ゅ'},{q:'ちょ',a:'cho',hint:'ち+ょ'},
+          {q:'にゃ',a:'nya',hint:'に+ゃ'},{q:'にゅ',a:'nyu',hint:'に+ゅ'},{q:'にょ',a:'nyo',hint:'に+ょ'},
+          {q:'ひゃ',a:'hya',hint:'ひ+ゃ'},{q:'みゃ',a:'mya',hint:'み+ゃ'},{q:'りょ',a:'ryo',hint:'り+ょ'},
+        ]
+      },
+    ]
+  },
+
+  // ── Katakana ──
+  { book:'scripts', category:'Katakana · Basic', catJP:'カタカナ基礎', catIcon:'ア',
+    catDesc:'The 46 basic katakana — used for foreign words and emphasis',
+    items:[
+      { id:'kata-vowels', name:'Vowels', jp:'ぼいん — アイウエオ', type:'katakana', prompt:'romaji', desc:'The 5 core vowels',
+        data:[
+          {q:'ア',a:'a',hint:'vowel row'},{q:'イ',a:'i',hint:'vowel row'},
+          {q:'ウ',a:'u',hint:'vowel row'},{q:'エ',a:'e',hint:'vowel row'},
+          {q:'オ',a:'o',hint:'vowel row'},
+        ]
+      },
+      { id:'kata-ka-row', name:'K-row · カ行', jp:'カ・キ・ク・ケ・コ', type:'katakana', prompt:'romaji', desc:'ka-ki-ku-ke-ko',
+        data:[
+          {q:'カ',a:'ka',hint:'カ行'},{q:'キ',a:'ki',hint:'カ行'},{q:'ク',a:'ku',hint:'カ行'},
+          {q:'ケ',a:'ke',hint:'カ行'},{q:'コ',a:'ko',hint:'カ行'},
+        ]
+      },
+      { id:'kata-sa-row', name:'S-row · サ行', jp:'サ・シ・ス・セ・ソ', type:'katakana', prompt:'romaji', desc:'sa-shi-su-se-so',
+        data:[
+          {q:'サ',a:'sa',hint:'サ行'},{q:'シ',a:'shi',hint:'サ行'},{q:'ス',a:'su',hint:'サ行'},
+          {q:'セ',a:'se',hint:'サ行'},{q:'ソ',a:'so',hint:'サ行'},
+        ]
+      },
+      { id:'kata-ta-row', name:'T-row · タ行', jp:'タ・チ・ツ・テ・ト', type:'katakana', prompt:'romaji', desc:'ta-chi-tsu-te-to',
+        data:[
+          {q:'タ',a:'ta',hint:'タ行'},{q:'チ',a:'chi',hint:'タ行'},{q:'ツ',a:'tsu',hint:'タ行'},
+          {q:'テ',a:'te',hint:'タ行'},{q:'ト',a:'to',hint:'タ行'},
+        ]
+      },
+      { id:'kata-na-row', name:'N-row · ナ行', jp:'ナ・ニ・ヌ・ネ・ノ', type:'katakana', prompt:'romaji', desc:'na-ni-nu-ne-no',
+        data:[
+          {q:'ナ',a:'na',hint:'ナ行'},{q:'ニ',a:'ni',hint:'ナ行'},{q:'ヌ',a:'nu',hint:'ナ行'},
+          {q:'ネ',a:'ne',hint:'ナ行'},{q:'ノ',a:'no',hint:'ナ行'},
+        ]
+      },
+      { id:'kata-ha-row', name:'H-row · ハ行', jp:'ハ・ヒ・フ・ヘ・ホ', type:'katakana', prompt:'romaji', desc:'ha-hi-fu-he-ho',
+        data:[
+          {q:'ハ',a:'ha',hint:'ハ行'},{q:'ヒ',a:'hi',hint:'ハ行'},{q:'フ',a:'fu',hint:'ハ行'},
+          {q:'ヘ',a:'he',hint:'ハ行'},{q:'ホ',a:'ho',hint:'ハ行'},
+        ]
+      },
+      { id:'kata-ma-row', name:'M-row · マ行', jp:'マ・ミ・ム・メ・モ', type:'katakana', prompt:'romaji', desc:'ma-mi-mu-me-mo',
+        data:[
+          {q:'マ',a:'ma',hint:'マ行'},{q:'ミ',a:'mi',hint:'マ行'},{q:'ム',a:'mu',hint:'マ行'},
+          {q:'メ',a:'me',hint:'マ行'},{q:'モ',a:'mo',hint:'マ行'},
+        ]
+      },
+      { id:'kata-ya-wa-row', name:'Y, R, W & N', jp:'ヤ行・ラ行・ワ行・ン', type:'katakana', prompt:'romaji', desc:'ya, ra, wa rows and n',
+        data:[
+          {q:'ヤ',a:'ya',hint:'ヤ行'},{q:'ユ',a:'yu',hint:'ヤ行'},{q:'ヨ',a:'yo',hint:'ヤ行'},
+          {q:'ラ',a:'ra',hint:'ラ行'},{q:'リ',a:'ri',hint:'ラ行'},{q:'ル',a:'ru',hint:'ラ行'},
+          {q:'レ',a:'re',hint:'ラ行'},{q:'ロ',a:'ro',hint:'ラ行'},
+          {q:'ワ',a:'wa',hint:'ワ行'},{q:'ヲ',a:'wo',hint:'ワ行'},{q:'ン',a:'n',hint:'ン'},
+        ]
+      },
+    ]
+  },
+  { book:'scripts', category:'Katakana · Dakuten & Loanwords', catJP:'カタカナ濁点・外来語', catIcon:'ガ',
+    catDesc:'Voiced katakana and sounds unique to foreign loan words',
+    items:[
+      { id:'kata-dak-voiced', name:'Voiced Rows · 濁音', jp:'ガ行・ザ行・ダ行・バ行', type:'katakana', prompt:'romaji', desc:'G, Z, D, B rows',
+        data:[
+          {q:'ガ',a:'ga',hint:'゛on カ'},{q:'ギ',a:'gi',hint:'゛on キ'},{q:'グ',a:'gu',hint:'゛on ク'},
+          {q:'ゲ',a:'ge',hint:'゛on ケ'},{q:'ゴ',a:'go',hint:'゛on コ'},
+          {q:'ザ',a:'za',hint:'゛on サ'},{q:'ジ',a:'ji',hint:'゛on シ'},{q:'ズ',a:'zu',hint:'゛on ス'},
+          {q:'ゼ',a:'ze',hint:'゛on セ'},{q:'ゾ',a:'zo',hint:'゛on ソ'},
+          {q:'ダ',a:'da',hint:'゛on タ'},{q:'デ',a:'de',hint:'゛on テ'},{q:'ド',a:'do',hint:'゛on ト'},
+          {q:'バ',a:'ba',hint:'゛on ハ'},{q:'ビ',a:'bi',hint:'゛on ヒ'},
+        ]
+      },
+      { id:'kata-loanword', name:'Loanword Sounds · 外来語音', jp:'ファ・ウィ・ヴ…', type:'katakana', prompt:'romaji', desc:'Sounds borrowed from foreign languages',
+        data:[
+          {q:'パ',a:'pa',hint:'゜on ハ'},{q:'ピ',a:'pi',hint:'゜on ヒ'},{q:'プ',a:'pu',hint:'゜on フ'},
+          {q:'ペ',a:'pe',hint:'゜on ヘ'},{q:'ポ',a:'po',hint:'゜on ホ'},
+          {q:'ファ',a:'fa',hint:'フ+ァ'},{q:'フィ',a:'fi',hint:'フ+ィ'},{q:'フェ',a:'fe',hint:'フ+ェ'},
+          {q:'ウィ',a:'wi',hint:'ウ+ィ'},{q:'ウェ',a:'we',hint:'ウ+ェ'},{q:'ウォ',a:'wo',hint:'ウ+ォ'},
+          {q:'ヴ',a:'vu',hint:'voiced u'},{q:'ティ',a:'ti',hint:'テ+ィ'},{q:'ディ',a:'di',hint:'デ+ィ'},
+          {q:'ツァ',a:'tsa',hint:'ツ+ァ'},
+        ]
+      },
+    ]
+  },
+
+  // ── Kanji by JLPT Level ──
+  { book:'scripts', category:'Kanji · JLPT N5', catJP:'漢字 N5', catIcon:'漢',
+    catDesc:'The ~80 kanji required for JLPT N5 — the beginner level',
+    items:[
+      { id:'kanji-n5-core', name:'N5 Core Kanji A', jp:'N5 漢字 A', type:'kanji', prompt:'meaning', desc:'Most essential N5 kanji — set 1',
+        data:[
+          {q:'日',a:'sun / day',hint:'にち・ひ'},{q:'月',a:'moon / month',hint:'つき・がつ'},
+          {q:'火',a:'fire',hint:'ひ・か'},{q:'水',a:'water',hint:'みず・すい'},
+          {q:'木',a:'tree / wood',hint:'き・もく'},{q:'金',a:'gold / money',hint:'きん・かね'},
+          {q:'土',a:'earth / soil',hint:'つち・ど'},{q:'山',a:'mountain',hint:'やま・さん'},
+          {q:'川',a:'river',hint:'かわ・せん'},{q:'人',a:'person',hint:'ひと・じん'},
+          {q:'口',a:'mouth',hint:'くち・こう'},{q:'手',a:'hand',hint:'て・しゅ'},
+          {q:'目',a:'eye',hint:'め・もく'},{q:'耳',a:'ear',hint:'みみ・じ'},
+          {q:'足',a:'foot / leg',hint:'あし・そく'},
+        ]
+      },
+      { id:'kanji-n5-core2', name:'N5 Core Kanji B', jp:'N5 漢字 B', type:'kanji', prompt:'meaning', desc:'Essential N5 kanji — set 2',
+        data:[
+          {q:'一',a:'one',hint:'いち'},{q:'二',a:'two',hint:'に'},{q:'三',a:'three',hint:'さん'},
+          {q:'四',a:'four',hint:'し・よん'},{q:'五',a:'five',hint:'ご'},
+          {q:'六',a:'six',hint:'ろく'},{q:'七',a:'seven',hint:'なな・しち'},
+          {q:'八',a:'eight',hint:'はち'},{q:'九',a:'nine',hint:'きゅう'},
+          {q:'十',a:'ten',hint:'じゅう'},{q:'百',a:'hundred',hint:'ひゃく'},
+          {q:'千',a:'thousand',hint:'せん'},{q:'万',a:'ten thousand',hint:'まん'},
+          {q:'円',a:'yen / circle',hint:'えん'},{q:'年',a:'year',hint:'ねん・とし'},
+        ]
+      },
+      { id:'kanji-n5-direction', name:'N5 Direction & Size', jp:'N5 方向・大きさ', type:'kanji', prompt:'meaning', desc:'Position, direction and size',
+        data:[
+          {q:'上',a:'up / above',hint:'うえ・じょう'},{q:'下',a:'down / below',hint:'した・か'},
+          {q:'左',a:'left',hint:'ひだり・さ'},{q:'右',a:'right',hint:'みぎ・う'},
+          {q:'中',a:'middle / inside',hint:'なか・ちゅう'},{q:'外',a:'outside',hint:'そと・がい'},
+          {q:'大',a:'big / large',hint:'おお・だい'},{q:'小',a:'small',hint:'ちい・しょう'},
+          {q:'前',a:'before / front',hint:'まえ・ぜん'},{q:'後',a:'after / behind',hint:'うしろ・ご'},
+          {q:'東',a:'east',hint:'ひがし・とう'},{q:'西',a:'west',hint:'にし・せい'},
+          {q:'南',a:'south',hint:'みなみ・なん'},{q:'北',a:'north',hint:'きた・ほく'},
+          {q:'間',a:'between / space / time',hint:'あいだ・かん'},
+        ]
+      },
+      { id:'kanji-n5-people', name:'N5 People & Life', jp:'N5 人・生活', type:'kanji', prompt:'meaning', desc:'People, life and daily activities',
+        data:[
+          {q:'父',a:'father',hint:'ちち・ふ'},{q:'母',a:'mother',hint:'はは・ぼ'},
+          {q:'子',a:'child',hint:'こ・し'},{q:'男',a:'man',hint:'おとこ・だん'},
+          {q:'女',a:'woman',hint:'おんな・じょ'},{q:'生',a:'life / birth / raw',hint:'せい・い'},
+          {q:'先',a:'ahead / previous',hint:'さき・せん'},{q:'学',a:'study / learn',hint:'まな・がく'},
+          {q:'校',a:'school',hint:'こう'},{q:'食',a:'eat / food',hint:'た・しょく'},
+          {q:'飲',a:'drink',hint:'の・いん'},{q:'見',a:'see / look',hint:'み・けん'},
+          {q:'聞',a:'hear / ask',hint:'き・もん'},{q:'話',a:'speak / story',hint:'はな・わ'},
+          {q:'書',a:'write',hint:'か・しょ'},
+        ]
+      },
+    ]
+  },
+  { book:'scripts', category:'Kanji · JLPT N4', catJP:'漢字 N4', catIcon:'級',
+    catDesc:'Key kanji for JLPT N4 — elementary level (~170 kanji total)',
+    items:[
+      { id:'kanji-n4-verbs', name:'N4 Action Kanji', jp:'N4 動作の漢字', type:'kanji', prompt:'meaning', desc:'Verbs and actions',
+        data:[
+          {q:'行',a:'go',hint:'い・こう'},{q:'来',a:'come',hint:'く・らい'},
+          {q:'帰',a:'return',hint:'かえ・き'},{q:'入',a:'enter',hint:'はい・にゅう'},
+          {q:'出',a:'exit / emit',hint:'で・しゅつ'},{q:'起',a:'wake up / rise',hint:'お・き'},
+          {q:'走',a:'run',hint:'はし・そう'},{q:'歩',a:'walk',hint:'ある・ほ'},
+          {q:'乗',a:'ride / board',hint:'の・じょう'},{q:'降',a:'get off',hint:'お・こう'},
+          {q:'作',a:'make / create',hint:'つく・さく'},{q:'使',a:'use',hint:'つか・し'},
+          {q:'思',a:'think',hint:'おも・し'},{q:'知',a:'know',hint:'し・ち'},
+          {q:'読',a:'read',hint:'よ・どく'},
+        ]
+      },
+      { id:'kanji-n4-adj', name:'N4 Descriptive Kanji', jp:'N4 形容の漢字', type:'kanji', prompt:'meaning', desc:'Quality and descriptive kanji',
+        data:[
+          {q:'新',a:'new',hint:'あたら・しん'},{q:'古',a:'old',hint:'ふる・こ'},
+          {q:'高',a:'high / expensive',hint:'たか・こう'},{q:'低',a:'low',hint:'ひく・てい'},
+          {q:'多',a:'many / much',hint:'おお・た'},{q:'少',a:'few / little',hint:'すく・しょう'},
+          {q:'長',a:'long',hint:'なが・ちょう'},{q:'短',a:'short',hint:'みじか・たん'},
+          {q:'強',a:'strong',hint:'つよ・きょう'},{q:'弱',a:'weak',hint:'よわ・じゃく'},
+          {q:'明',a:'bright / clear',hint:'あか・めい'},{q:'暗',a:'dark',hint:'くら・あん'},
+          {q:'早',a:'early / fast',hint:'はや・そう'},{q:'遅',a:'late / slow',hint:'おそ・ち'},
+          {q:'楽',a:'comfortable / fun',hint:'たの・らく'},
+        ]
+      },
+    ]
+  },
+];
+
   // ── JBP BOOK 1 · UNIT 1: Greetings & Introductions ──
   { book:'jbp', category:'JBP Book 1 · Unit 1', catJP:'はじめまして', catIcon:'会',
     catDesc:'Greetings, introductions, basic identity statements',
@@ -1237,6 +1507,21 @@ function renderDash() {
   renderCategories();
 }
 
+
+function filterBook(b) {
+  activeBookFilter = b;
+  const BASE = "font-family:'Inconsolata',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.45rem 1rem;cursor:pointer;border-radius:2px;";
+  const OFF  = BASE + "border:1.5px solid #d8cfc0;background:transparent;color:#7a7060;";
+  const map = {
+    tabAll:     b==='all'     ? BASE+"border:1.5px solid #12100e;background:#12100e;color:#f7f2ea;" : OFF,
+    tabScripts: b==='scripts' ? BASE+"border:1.5px solid #c0602a;background:#c0602a;color:#fff;"    : OFF,
+    tabJBP:     b==='jbp'     ? BASE+"border:1.5px solid #1a4b8b;background:#1a4b8b;color:#fff;"    : OFF,
+    tabKJW:     b==='kjw'     ? BASE+"border:1.5px solid #4b0082;background:#4b0082;color:#fff;"    : OFF,
+  };
+  Object.entries(map).forEach(([id,s]) => { const el = document.getElementById(id); if(el) el.style.cssText = s; });
+  renderCategories();
+}
+
 function renderCategories() {
   const u = currentUser;
   const catEl = document.getElementById('categoriesEl');
@@ -1247,8 +1532,10 @@ function renderCategories() {
     block.className = 'category-block';
     const bookBadge = cat.book === 'jbp'
       ? '<span style="font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;padding:.15rem .5rem;border-radius:2px;background:rgba(26,75,139,.12);color:#1a4b8b;margin-left:.5rem">JBP</span>'
-      : '<span style="font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;padding:.15rem .5rem;border-radius:2px;background:rgba(75,0,130,.12);color:#4b0082;margin-left:.5rem">Kanji Way</span>';
-    const borderColor = cat.book === 'jbp' ? '#1a4b8b' : '#4b0082';
+      : cat.book === 'kjw'
+      ? '<span style="font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;padding:.15rem .5rem;border-radius:2px;background:rgba(75,0,130,.12);color:#4b0082;margin-left:.5rem">Kanji Way</span>'
+      : '<span style="font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;padding:.15rem .5rem;border-radius:2px;background:rgba(192,96,42,.12);color:#c0602a;margin-left:.5rem">Scripts</span>';
+    const borderColor = cat.book === 'jbp' ? '#1a4b8b' : cat.book === 'kjw' ? '#4b0082' : '#c0602a';
     block.innerHTML = `
       <div class="category-header" style="border-left:4px solid ${borderColor}">
         <div class="cat-icon">${cat.catIcon}</div>
