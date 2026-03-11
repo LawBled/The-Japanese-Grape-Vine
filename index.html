@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#b5261e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="The Japanese Grape Vine">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>The Japanese Grape Vine</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700;900&family=Zen+Old+Mincho:wght@400;700;900&family=Inconsolata:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #12100e;
+  --paper: #f7f2ea;
+  --cream: #ede7d9;
+  --red: #b5261e;
+  --red-dim: rgba(181,38,30,0.12);
+  --gold: #a07830;
+  --gold-dim: rgba(160,120,48,0.1);
+  --slate: #3a4a5a;
+  --muted: #7a7060;
+  --border: #d8cfc0;
+  --correct: #2a6648;
+  --wrong: #b5261e;
+  --shadow-sm: 0 2px 8px rgba(18,16,14,0.08);
+  --shadow-md: 0 6px 24px rgba(18,16,14,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inconsolata', monospace;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 15% 0%, rgba(160,120,48,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 90% 100%, rgba(181,38,30,0.04) 0%, transparent 60%);
+}
+
+/* ─── PAGE SYSTEM ─── */
+.page { display: none; min-height: 100vh; }
+.page.active { display: flex; flex-direction: column; }
+
+/* ════════════════════════════════════
+   LOGIN PAGE
+════════════════════════════════════ */
+#loginPage {
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-deco {
+  position: absolute;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 18rem;
+  font-weight: 900;
+  color: rgba(18,16,14,0.03);
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+.login-deco.top { top: -3rem; right: -1rem; }
+.login-deco.bot { bottom: -5rem; left: -2rem; transform: rotate(-8deg); }
+
+.login-box {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 3rem 2.5rem;
+  box-shadow: var(--shadow-md), 6px 8px 0 var(--cream);
+  position: relative;
+  z-index: 1;
+  animation: fadeUp 0.5s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.login-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--red), var(--gold));
+  border-radius: 6px 6px 0 0;
+}
+
+.logo-char {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 4rem;
+  font-weight: 900;
+  color: var(--red);
+  line-height: 1;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.logo-sub {
+  font-family: 'Zen Old Mincho', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 2.5rem;
+  display: block;
+}
+
+.login-box label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.login-box input {
+  width: 100%;
+  font-family: 'Zen Old Mincho', serif;
+  font-size: 1.3rem;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid var(--border);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 3px;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 1.5rem;
+}
+.login-box input:focus { border-color: var(--red); }
+
+.login-existing {
+  margin-bottom: 1.5rem;
+}
+.login-existing-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+.existing-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.existing-chip {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.78rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--border);
+  background: var(--cream);
+  color: var(--slate);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.existing-chip:hover { border-color: var(--red); color: var(--red); background: var(--red-dim); }
+
+.btn-primary {
+  width: 100%;
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  padding: 0.85rem;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary:hover { background: var(--red); }
+
+/* ════════════════════════════════════
+   MAIN APP SHELL
+════════════════════════════════════ */
+.app-header {
+  border-bottom: 1.5px solid var(--border);
+  padding: 0.8rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-logo {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--red);
+  letter-spacing: 0.05em;
+}
+.app-logo span {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-pill {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.user-pill strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.btn-sm {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.85rem;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.15s;
+}
+.btn-sm:hover { border-color: var(--red); color: var(--red); }
+
+/* ════════════════════════════════════
+   DASHBOARD
+════════════════════════════════════ */
+#dashPage .page-body {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+  width: 100%;
+}
+
+.welcome-banner {
+  margin-bottom: 2rem;
+}
+.welcome-jp {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.welcome-sub {
+  font-size: 0.78rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  margin-top: 0.25rem;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.stat-card {
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  padding: 1.1rem 1.2rem;
+  box-shadow: var(--shadow-sm);
+}
+.stat-num {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--red);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
+.section-title {
+  font-family: 'Zen Old Mincho', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Lesson categories */
+.categories {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.category-block {
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.category-header {
+  padding: 1rem 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--paper);
+}
+
+.cat-icon {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.6rem;
+  color: var(--red);
+  min-width: 2rem;
+  text-align: center;
+}
+.cat-title {
+  font-family: 'Zen Old Mincho', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.cat-desc {
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 0.1rem;
+  letter-spacing: 0.05em;
+}
+
+.lesson-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0;
+}
+
+.lesson-btn {
+  border: none;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: #fff;
+  padding: 1rem 1.2rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+.lesson-btn:hover {
+  background: var(--gold-dim);
+}
+.lesson-btn:last-child, .lesson-btn:nth-child(even):last-child { border-right: none; }
+
+.lesson-name {
+  font-family: 'Zen Old Mincho', serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ink);
+  display: block;
+}
+.lesson-jp {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.1rem;
+  color: var(--red);
+  display: block;
+  margin: 0.15rem 0;
+}
+.lesson-count {
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+.lesson-score-badge {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  font-size: 0.65rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 2px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+.badge-good { background: rgba(42,102,72,0.12); color: var(--correct); }
+.badge-mid  { background: rgba(160,120,48,0.12); color: var(--gold); }
+.badge-low  { background: rgba(181,38,30,0.1); color: var(--wrong); }
+
+/* ════════════════════════════════════
+   QUIZ PAGE
+════════════════════════════════════ */
+#quizPage .page-body {
+  max-width: 580px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+  width: 100%;
+}
+
+.quiz-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.quiz-lesson-title {
+  font-family: 'Zen Old Mincho', serif;
+  font-size: 0.88rem;
+  color: var(--ink);
+  font-weight: 700;
+}
+.quiz-lesson-jp {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.progress-track {
+  height: 3px;
+  background: var(--cream);
+  border-radius: 2px;
+  margin-bottom: 1.75rem;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--red), var(--gold));
+  transition: width 0.45s ease;
+  border-radius: 2px;
+}
+
+.q-card {
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  padding: 2.5rem 2rem 2rem;
+  text-align: center;
+  box-shadow: var(--shadow-md), 5px 7px 0 var(--cream);
+  position: relative;
+  animation: cardIn 0.3s ease both;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.99); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.q-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--red), var(--gold));
+  border-radius: 5px 5px 0 0;
+}
+
+.q-num {
+  font-size: 0.68rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+.type-tag {
+  display: inline-block;
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.6rem;
+  border-radius: 2px;
+  border: 1px solid currentColor;
+  margin-bottom: 1.25rem;
+}
+.tag-hiragana { color: #8b4513; }
+.tag-katakana { color: #1a4b8b; }
+.tag-kanji    { color: #4b0082; }
+.tag-vocab    { color: #2a6648; }
+.tag-grammar  { color: #6b4a00; }
+
+.char-main {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 6rem;
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+  transition: transform 0.2s;
+}
+.char-main.small-char { font-size: 2.2rem; line-height: 1.4; }
+
+.char-hint {
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.25rem;
+}
+.char-prompt {
+  font-family: 'Zen Old Mincho', serif;
+  font-size: 1rem;
+  color: var(--gold);
+  margin-bottom: 2rem;
+  letter-spacing: 0.05em;
+}
+
+/* Choices */
+.choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+
+.choice {
+  font-family: 'Zen Old Mincho', serif;
+  font-size: 0.92rem;
+  padding: 0.85rem 0.75rem;
+  border: 1.5px solid var(--border);
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.15s;
+  line-height: 1.35;
+  text-align: center;
+}
+.choice:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: var(--gold-dim);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+}
+.choice .c-jp { font-family: 'Noto Serif JP', serif; font-size: 1.3rem; display: block; }
+.choice .c-en { font-size: 0.7rem; color: var(--muted); display: block; margin-top: 0.15rem; }
+.choice.correct { background: rgba(42,102,72,0.1); border-color: var(--correct); color: var(--correct); }
+.choice.wrong   { background: rgba(181,38,30,0.08); border-color: var(--wrong); color: var(--wrong); }
+.choice:disabled { cursor: default; }
+
+.q-feedback {
+  margin-top: 1.25rem;
+  min-height: 1.8rem;
+  font-family: 'Zen Old Mincho', serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.q-feedback.show { opacity: 1; }
+.q-feedback.ok  { color: var(--correct); }
+.q-feedback.bad { color: var(--wrong); }
+
+.next-btn {
+  margin-top: 1.25rem;
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.6rem 2rem;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s;
+}
+.next-btn.show { opacity: 1; pointer-events: auto; }
+.next-btn:hover { background: var(--red); }
+
+/* ════════════════════════════════════
+   RESULTS
+════════════════════════════════════ */
+.result-card {
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  padding: 3rem 2rem;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  animation: fadeUp 0.4s ease both;
+}
+.result-jp {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 3.5rem;
+  color: var(--red);
+  line-height: 1.1;
+}
+.result-score-big {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--ink);
+  margin: 0.75rem 0 0.25rem;
+}
+.result-pct { color: var(--red); }
+.result-msg {
+  font-family: 'Zen Old Mincho', serif;
+  font-size: 1rem;
+  color: var(--muted);
+  margin-bottom: 2rem;
+  letter-spacing: 0.05em;
+}
+.result-breakdown {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+.result-breakdown strong { color: var(--ink); font-size: 1.1rem; }
+.result-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+
+.btn-red {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.7rem 1.8rem;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-red:hover { background: var(--ink); }
+
+.btn-outline {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.7rem 1.8rem;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--border);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-outline:hover { border-color: var(--ink); }
+
+/* ── Responsive ── */
+@media (max-width: 500px) {
+  .char-main { font-size: 4.5rem; }
+  .login-box { padding: 2rem 1.5rem; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ LOGIN ══════════════════ -->
+<div id="loginPage" class="page active">
+  <div class="login-deco top">日</div>
+  <div class="login-deco bot">語</div>
+  <div class="login-box">
+    <span class="logo-char">日本語</span>
+    <span class="logo-sub">The Japanese Grape Vine · Enter your name</span>
+
+    <div id="existingSection" style="display:none">
+      <span class="login-existing-label">Continue as…</span>
+      <div class="existing-list" id="existingList"></div>
+      <div style="height:1rem"></div>
+    </div>
+
+    <label for="nameInput">Your name</label>
+    <input type="text" id="nameInput" placeholder="e.g. Sakura" maxlength="30" autocomplete="off" />
+    <button class="btn-primary" onclick="doLogin()">始める — Begin</button>
+  </div>
+</div>
+
+<!-- ══════════════════ DASHBOARD ══════════════════ -->
+<div id="dashPage" class="page">
+  <header class="app-header">
+    <div class="app-logo">日本語 <span>Study App</span></div>
+    <div class="header-right">
+      <div class="user-pill">こんにちは、<strong id="headerName"></strong></div>
+      <button class="btn-sm" onclick="goToLogin()">Switch User</button>
+    </div>
+  </header>
+  <div class="page-body">
+    <div class="welcome-banner">
+      <div class="welcome-jp" id="welcomeJP">おかえり！</div>
+      <div class="welcome-sub" id="welcomeSub">Choose a lesson to practice</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Questions Done</div></div>
+      <div class="stat-card"><div class="stat-num" id="statCorrect">0</div><div class="stat-label">Correct</div></div>
+      <div class="stat-card"><div class="stat-num" id="statPct">—</div><div class="stat-label">Accuracy</div></div>
+      <div class="stat-card"><div class="stat-num" id="statLessons">0</div><div class="stat-label">Lessons Done</div></div>
+    </div>
+    <div class="section-title">Study Books</div>
+    <div style="display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap" id="bookTabRow">
+      <button id="tabAll" onclick="filterBook('all')" style="font-family:'Inconsolata',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.45rem 1rem;border:1.5px solid #12100e;background:#12100e;color:#f7f2ea;cursor:pointer;border-radius:2px">All Books</button>
+      <button id="tabJBP" onclick="filterBook('jbp')" style="font-family:'Inconsolata',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.45rem 1rem;border:1.5px solid #d8cfc0;background:transparent;color:#7a7060;cursor:pointer;border-radius:2px">Japanese for Busy People</button>
+      <button id="tabKJW" onclick="filterBook('kjw')" style="font-family:'Inconsolata',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.45rem 1rem;border:1.5px solid #d8cfc0;background:transparent;color:#7a7060;cursor:pointer;border-radius:2px">The Kanji Way</button>
+    </div>
+    <div class="categories" id="categoriesEl"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ QUIZ ══════════════════ -->
+<div id="quizPage" class="page">
+  <header class="app-header">
+    <div class="app-logo">日本語 <span>Study App</span></div>
+    <div class="header-right">
+      <button class="btn-sm" onclick="goToDash()">← Back</button>
+    </div>
+  </header>
+  <div class="page-body">
+    <div class="quiz-meta">
+      <div>
+        <div class="quiz-lesson-title" id="quizLessonTitle"></div>
+        <div class="quiz-lesson-jp" id="quizLessonJP"></div>
+      </div>
+      <div style="font-size:0.72rem;color:var(--muted);letter-spacing:0.1em">
+        <span id="qNumDisp">1</span> / <span id="qTotalDisp">10</span>
+      </div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0"></div></div>
+    <div id="qCardWrap"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  DATA  — textbook-style lessons
+// ══════════════════════════════════════════════
+const LESSONS = [
+  // ── JBP BOOK 1 · UNIT 1: Greetings & Introductions ──
+  { book:'jbp', category:'JBP Book 1 · Unit 1', catJP:'はじめまして', catIcon:'会',
+    catDesc:'Greetings, introductions, basic identity statements',
+    items:[
+      { id:'jbp1u1-greetings', name:'Lesson 1 · Greetings', jp:'あいさつ', type:'vocab', prompt:'meaning', desc:'Everyday greetings',
+        data:[
+          {q:'おはようございます',a:'Good morning (formal)',hint:'ohayou gozaimasu'},
+          {q:'こんにちは',a:'Hello / Good afternoon',hint:'konnichiwa'},
+          {q:'こんばんは',a:'Good evening',hint:'konbanwa'},
+          {q:'おやすみなさい',a:'Good night',hint:'oyasumi nasai'},
+          {q:'さようなら',a:'Goodbye',hint:'sayounara'},
+          {q:'ありがとうございます',a:'Thank you (formal)',hint:'arigatou gozaimasu'},
+          {q:'すみません',a:'Excuse me / I am sorry',hint:'sumimasen'},
+          {q:'ごめんなさい',a:'I am sorry',hint:'gomen nasai'},
+          {q:'どうぞよろしく',a:'Pleased to meet you',hint:'douzo yoroshiku'},
+          {q:'はじめまして',a:'How do you do / Nice to meet you',hint:'hajimemashite'},
+          {q:'いただきます',a:'I humbly receive (said before eating)',hint:'itadakimasu'},
+          {q:'ごちそうさまでした',a:'Thank you for the meal (said after eating)',hint:'gochisousama deshita'},
+          {q:'いってらっしゃい',a:'Take care / Goodbye (said to departing person)',hint:'itterasshai'},
+          {q:'ただいま',a:'I am home',hint:'tadaima'},
+        ]
+      },
+      { id:'jbp1u1-intro', name:'Lesson 2 · Introductions', jp:'自己紹介', type:'grammar', prompt:'meaning', desc:'Identity statements and yes/no patterns',
+        data:[
+          {q:'〜は〜です',a:'[Topic] is [noun] — basic statement',hint:'X wa Y desu'},
+          {q:'〜じゃありません',a:'[X] is not [Y] — plain negative',hint:'ja arimasen'},
+          {q:'〜ですか',a:'Is it [X]? — yes/no question marker',hint:'desu ka'},
+          {q:'はい',a:'Yes',hint:'hai'},
+          {q:'いいえ',a:'No',hint:'iie'},
+          {q:'そうです',a:'That is right / That is so',hint:'sou desu'},
+          {q:'そうですか',a:'Is that so? / I see',hint:'sou desu ka'},
+          {q:'わたし',a:'I / me (neutral)',hint:'watashi'},
+          {q:'あなた',a:'you',hint:'anata'},
+          {q:'〜さん',a:'Mr. / Ms. — polite name suffix',hint:'san'},
+          {q:'おなまえはなんですか',a:'What is your name?',hint:'onamae wa nan desu ka'},
+          {q:'しごとはなんですか',a:'What is your job?',hint:'shigoto wa nan desu ka'},
+          {q:'どちらからですか',a:'Where are you from?',hint:'dochira kara desu ka'},
+          {q:'〜からきました',a:'I came from [place]',hint:'~ kara kimashita'},
+        ]
+      },
+    ]
+  },
+  // ── JBP BOOK 1 · UNIT 2: Things & Numbers ──
+  { book:'jbp', category:'JBP Book 1 · Unit 2', catJP:'これはなんですか', catIcon:'物',
+    catDesc:'Identifying things, demonstratives, numbers and prices',
+    items:[
+      { id:'jbp1u2-demonstratives', name:'Lesson 3 · This / That', jp:'これ・それ・あれ', type:'grammar', prompt:'meaning', desc:'Demonstratives — ko-so-a-do system',
+        data:[
+          {q:'これ',a:'this (near speaker)',hint:'kore'},
+          {q:'それ',a:'that (near listener)',hint:'sore'},
+          {q:'あれ',a:'that over there',hint:'are'},
+          {q:'どれ',a:'which one?',hint:'dore'},
+          {q:'この',a:'this [noun]',hint:'kono'},
+          {q:'その',a:'that [noun] (near listener)',hint:'sono'},
+          {q:'あの',a:'that [noun] over there',hint:'ano'},
+          {q:'どの',a:'which [noun]?',hint:'dono'},
+          {q:'ここ',a:'here',hint:'koko'},
+          {q:'そこ',a:'there (near listener)',hint:'soko'},
+          {q:'あそこ',a:'over there',hint:'asoko'},
+          {q:'どこ',a:'where?',hint:'doko'},
+          {q:'こちら',a:'this way / this person (polite)',hint:'kochira'},
+          {q:'どちら',a:'which way? / which person? (polite)',hint:'dochira'},
+        ]
+      },
+      { id:'jbp1u2-numbers', name:'Lesson 4 · Numbers & Prices', jp:'かず・ねだん', type:'vocab', prompt:'meaning', desc:'Numbers 1–10,000 and shopping expressions',
+        data:[
+          {q:'いち',a:'1 — one',hint:'ichi'},{q:'に',a:'2 — two',hint:'ni'},
+          {q:'さん',a:'3 — three',hint:'san'},{q:'し／よん',a:'4 — four',hint:'shi/yon'},
+          {q:'ご',a:'5 — five',hint:'go'},{q:'ろく',a:'6 — six',hint:'roku'},
+          {q:'なな／しち',a:'7 — seven',hint:'nana/shichi'},{q:'はち',a:'8 — eight',hint:'hachi'},
+          {q:'きゅう／く',a:'9 — nine',hint:'kyuu/ku'},{q:'じゅう',a:'10 — ten',hint:'juu'},
+          {q:'ひゃく',a:'100 — hundred',hint:'hyaku'},{q:'せん',a:'1,000 — thousand',hint:'sen'},
+          {q:'いくらですか',a:'How much is it?',hint:'ikura desu ka'},
+          {q:'〜えんです',a:'It is [X] yen',hint:'~ en desu'},
+        ]
+      },
+    ]
+  },
+  // ── JBP BOOK 1 · UNIT 3: Places & Movement ──
+  { book:'jbp', category:'JBP Book 1 · Unit 3', catJP:'どこへいきますか', catIcon:'行',
+    catDesc:'Going places, transport, movement verbs',
+    items:[
+      { id:'jbp1u3-verbs', name:'Lesson 7 · Movement Verbs', jp:'どうし', type:'grammar', prompt:'meaning', desc:'Core verb patterns — present & past tense',
+        data:[
+          {q:'いきます',a:'go (polite present/future)',hint:'ikimasu'},
+          {q:'きます',a:'come (polite)',hint:'kimasu'},
+          {q:'かえります',a:'return / go home',hint:'kaerimasu'},
+          {q:'〜へいきます',a:'go to [place]',hint:'~ e ikimasu'},
+          {q:'〜でいきます',a:'go by [means of transport]',hint:'~ de ikimasu'},
+          {q:'〜といきます',a:'go with [person]',hint:'~ to ikimasu'},
+          {q:'いきません',a:'do not go (negative)',hint:'ikimasen'},
+          {q:'いきましたか',a:'Did you go? (past question)',hint:'ikimashita ka'},
+          {q:'いきました',a:'went (past affirmative)',hint:'ikimashita'},
+          {q:'いきませんでした',a:'did not go (past negative)',hint:'ikimasen deshita'},
+          {q:'いっしょに',a:'together',hint:'issho ni'},
+          {q:'〜にのります',a:'board / ride [vehicle]',hint:'~ ni norimasu'},
+          {q:'〜でおります',a:'get off at [place]',hint:'~ de orimasu'},
+          {q:'まっすぐいってください',a:'Please go straight ahead',hint:'massugu itte kudasai'},
+        ]
+      },
+      { id:'jbp1u3-places', name:'Lesson 8 · Places & Transport', jp:'ばしょ・のりもの', type:'vocab', prompt:'meaning', desc:'Location and transport vocabulary',
+        data:[
+          {q:'えき',a:'train station',hint:'eki'},{q:'でんしゃ',a:'train',hint:'densha'},
+          {q:'バス',a:'bus',hint:'basu'},{q:'タクシー',a:'taxi',hint:'takushii'},
+          {q:'ちかてつ',a:'subway / underground',hint:'chikatetsu'},
+          {q:'くうこう',a:'airport',hint:'kuukou'},{q:'ホテル',a:'hotel',hint:'hoteru'},
+          {q:'びょういん',a:'hospital',hint:'byouin'},{q:'ゆうびんきょく',a:'post office',hint:'yuubinkyoku'},
+          {q:'ぎんこう',a:'bank',hint:'ginkou'},{q:'スーパー',a:'supermarket',hint:'suupaa'},
+          {q:'レストラン',a:'restaurant',hint:'resutoran'},
+          {q:'としょかん',a:'library',hint:'toshokan'},
+          {q:'かいしゃ',a:'company / office',hint:'kaisha'},
+        ]
+      },
+    ]
+  },
+  // ── JBP BOOK 1 · UNIT 4: Time & Scheduling ──
+  { book:'jbp', category:'JBP Book 1 · Unit 4', catJP:'なんじですか', catIcon:'時',
+    catDesc:'Telling time, days, and scheduling',
+    items:[
+      { id:'jbp1u4-time', name:'Lesson 10 · Time', jp:'じかん・ようび', type:'vocab', prompt:'meaning', desc:'Hours, minutes, and days of the week',
+        data:[
+          {q:'なんじですか',a:'What time is it?',hint:'nanji desu ka'},
+          {q:'〜じ',a:'[X] o\'clock',hint:'~ ji'},{q:'〜ふん',a:'[X] minutes',hint:'~ fun'},
+          {q:'ごぜん',a:'a.m.',hint:'gozen'},{q:'ごご',a:'p.m.',hint:'gogo'},
+          {q:'にちようび',a:'Sunday',hint:'nichiyoubi'},{q:'げつようび',a:'Monday',hint:'getsuyoubi'},
+          {q:'かようび',a:'Tuesday',hint:'kayoubi'},{q:'すいようび',a:'Wednesday',hint:'suiyoubi'},
+          {q:'もくようび',a:'Thursday',hint:'mokuyoubi'},{q:'きんようび',a:'Friday',hint:'kin\'youbi'},
+          {q:'どようび',a:'Saturday',hint:'doyoubi'},
+          {q:'〜からです',a:'starts from [time]',hint:'~ kara desu'},
+          {q:'〜までです',a:'until [time]',hint:'~ made desu'},
+        ]
+      },
+      { id:'jbp1u4-activities', name:'Lesson 11 · Daily Verbs', jp:'まいにちのどうし', type:'vocab', prompt:'meaning', desc:'Everyday action verbs',
+        data:[
+          {q:'たべます',a:'eat',hint:'tabemasu'},{q:'のみます',a:'drink',hint:'nomimasu'},
+          {q:'みます',a:'watch / look',hint:'mimasu'},{q:'ききます',a:'listen / hear',hint:'kikimasu'},
+          {q:'よみます',a:'read',hint:'yomimasu'},{q:'かきます',a:'write',hint:'kakimasu'},
+          {q:'かいます',a:'buy',hint:'kaimasu'},{q:'はなします',a:'speak / talk',hint:'hanashimasu'},
+          {q:'わかります',a:'understand',hint:'wakarimasu'},{q:'あいます',a:'meet',hint:'aimasu'},
+          {q:'やすみます',a:'rest / take a day off',hint:'yasumimasu'},
+          {q:'おきます',a:'wake up / get up',hint:'okimasu'},
+          {q:'ねます',a:'sleep / go to bed',hint:'nemasu'},
+          {q:'はたらきます',a:'work',hint:'hatarakimasu'},
+        ]
+      },
+    ]
+  },
+  // ── JBP BOOK 1 · UNIT 5: Preferences & Requests ──
+  { book:'jbp', category:'JBP Book 1 · Unit 5', catJP:'すきですか', catIcon:'好',
+    catDesc:'Expressing likes, desires, and polite requests',
+    items:[
+      { id:'jbp1u5-likes', name:'Lesson 14 · Likes & Dislikes', jp:'すき・きらい', type:'grammar', prompt:'meaning', desc:'Na-adjective preferences',
+        data:[
+          {q:'すきです',a:'like / fond of',hint:'suki desu'},{q:'きらいです',a:'dislike',hint:'kirai desu'},
+          {q:'すきじゃありません',a:'do not like',hint:'suki ja arimasen'},
+          {q:'どんな〜がすきですか',a:'What kind of [X] do you like?',hint:'donna ~ ga suki desu ka'},
+          {q:'とても',a:'very / extremely',hint:'totemo'},{q:'あまり〜じゃない',a:'not very / not much',hint:'amari ~ ja nai'},
+          {q:'じょうずです',a:'skilled / good at',hint:'jouzu desu'},
+          {q:'へたです',a:'not good at / unskilled',hint:'heta desu'},
+          {q:'〜がわかります',a:'understand [X]',hint:'~ ga wakarimasu'},
+          {q:'〜ができます',a:'can do [X] / be able to',hint:'~ ga dekimasu'},
+          {q:'おねがいします',a:'Please / I humbly request',hint:'onegai shimasu'},
+          {q:'ください',a:'Please give me / Please do',hint:'kudasai'},
+          {q:'もちろん',a:'of course / certainly',hint:'mochiron'},
+          {q:'ざんねんですね',a:'That is a shame / too bad',hint:'zannen desu ne'},
+        ]
+      },
+      { id:'jbp1u5-requests', name:'Lesson 15 · Te-form Requests', jp:'〜てください', type:'grammar', prompt:'meaning', desc:'Requests, permissions, desires with te-form',
+        data:[
+          {q:'〜てください',a:'Please do [verb] — polite request',hint:'~ te kudasai'},
+          {q:'〜てもいいですか',a:'May I [verb]? / Is it okay?',hint:'~ te mo ii desu ka'},
+          {q:'〜てはいけません',a:'Must not [verb]',hint:'~ te wa ikemasen'},
+          {q:'〜たいです',a:'want to do [verb]',hint:'~ tai desu'},
+          {q:'〜たいとおもいます',a:'I think I want to [verb]',hint:'~ tai to omoimasu'},
+          {q:'みせてください',a:'Please show me',hint:'misete kudasai'},
+          {q:'まってください',a:'Please wait',hint:'matte kudasai'},
+          {q:'もういちどいってください',a:'Please say it one more time',hint:'mou ichido itte kudasai'},
+          {q:'ゆっくりはなしてください',a:'Please speak slowly',hint:'yukkuri hanashite kudasai'},
+          {q:'かいてください',a:'Please write it',hint:'kaite kudasai'},
+          {q:'〜ています',a:'is [verb]-ing / currently doing',hint:'~ te imasu'},
+          {q:'〜ていません',a:'is not [verb]-ing',hint:'~ te imasen'},
+        ]
+      },
+    ]
+  },
+  // ── KJW SECTION 1: Nature & Pictographic Roots ──
+  { book:'kjw', category:'Kanji Way · Section 1', catJP:'基本の漢字', catIcon:'基',
+    catDesc:'Pictographic kanji — natural forms as roots',
+    items:[
+      { id:'kjw-s1-nature', name:'Power Keys: Nature', jp:'しぜんの字', type:'kanji', prompt:'meaning', desc:'Sun, moon, elements, landscape',
+        data:[
+          {q:'日',a:'sun / day',hint:'にち・ひ'},{q:'月',a:'moon / month',hint:'つき・がつ'},
+          {q:'山',a:'mountain',hint:'やま・さん'},{q:'川',a:'river',hint:'かわ・せん'},
+          {q:'木',a:'tree',hint:'き・もく'},{q:'林',a:'grove (two trees)',hint:'はやし・りん'},
+          {q:'森',a:'forest (three trees)',hint:'もり・しん'},{q:'火',a:'fire',hint:'ひ・か'},
+          {q:'水',a:'water',hint:'みず・すい'},{q:'土',a:'earth / soil',hint:'つち・ど'},
+          {q:'石',a:'stone / rock',hint:'いし・せき'},{q:'田',a:'rice field / paddy',hint:'た・でん'},
+          {q:'雨',a:'rain',hint:'あめ・う'},{q:'風',a:'wind',hint:'かぜ・ふう'},
+          {q:'花',a:'flower',hint:'はな・か'},
+        ]
+      },
+      { id:'kjw-s1-body', name:'Power Keys: Body', jp:'からだの字', type:'kanji', prompt:'meaning', desc:'Human body as kanji roots',
+        data:[
+          {q:'人',a:'person',hint:'ひと・じん'},{q:'口',a:'mouth',hint:'くち・こう'},
+          {q:'目',a:'eye',hint:'め・もく'},{q:'耳',a:'ear',hint:'みみ・じ'},
+          {q:'手',a:'hand',hint:'て・しゅ'},{q:'足',a:'foot / leg',hint:'あし・そく'},
+          {q:'心',a:'heart / mind',hint:'こころ・しん'},{q:'力',a:'power / strength',hint:'ちから・りょく'},
+          {q:'体',a:'body',hint:'からだ・たい'},{q:'頭',a:'head',hint:'あたま・とう'},
+          {q:'顔',a:'face',hint:'かお・がん'},{q:'首',a:'neck',hint:'くび・しゅ'},
+          {q:'骨',a:'bone',hint:'ほね・こつ'},{q:'血',a:'blood',hint:'ち・けつ'},
+          {q:'息',a:'breath',hint:'いき・そく'},
+        ]
+      },
+    ]
+  },
+  // ── KJW SECTION 2: Numbers & Time ──
+  { book:'kjw', category:'Kanji Way · Section 2', catJP:'かず・じかん', catIcon:'数',
+    catDesc:'Number kanji and time-related characters',
+    items:[
+      { id:'kjw-s2-numbers', name:'Power Keys: Numbers', jp:'すうじ', type:'kanji', prompt:'meaning', desc:'Kanji numbers 1–10,000',
+        data:[
+          {q:'一',a:'one',hint:'いち・いつ'},{q:'二',a:'two',hint:'に・ふた'},
+          {q:'三',a:'three',hint:'さん・み'},{q:'四',a:'four',hint:'し・よん'},
+          {q:'五',a:'five',hint:'ご・いつ'},{q:'六',a:'six',hint:'ろく'},
+          {q:'七',a:'seven',hint:'なな・しち'},{q:'八',a:'eight',hint:'はち'},
+          {q:'九',a:'nine',hint:'きゅう・く'},{q:'十',a:'ten',hint:'じゅう'},
+          {q:'百',a:'hundred',hint:'ひゃく'},{q:'千',a:'thousand',hint:'せん'},
+          {q:'万',a:'ten thousand',hint:'まん'},{q:'半',a:'half',hint:'はん'},
+          {q:'零',a:'zero',hint:'れい'},
+        ]
+      },
+      { id:'kjw-s2-time', name:'Power Keys: Time', jp:'じかんの字', type:'kanji', prompt:'meaning', desc:'Time and calendar kanji',
+        data:[
+          {q:'時',a:'time / hour',hint:'とき・じ'},{q:'分',a:'minute / part',hint:'ふん・ぶん'},
+          {q:'秒',a:'second',hint:'びょう'},{q:'年',a:'year',hint:'とし・ねん'},
+          {q:'月',a:'month / moon',hint:'つき・がつ'},{q:'週',a:'week',hint:'しゅう'},
+          {q:'日',a:'day / sun',hint:'ひ・にち'},{q:'今',a:'now / this',hint:'いま・こん'},
+          {q:'朝',a:'morning',hint:'あさ・ちょう'},{q:'夜',a:'night',hint:'よる・や'},
+          {q:'昼',a:'daytime / noon',hint:'ひる・ちゅう'},{q:'前',a:'before / front',hint:'まえ・ぜん'},
+          {q:'後',a:'after / behind',hint:'うしろ・ご'},{q:'昨',a:'yesterday / last',hint:'さく'},
+          {q:'明',a:'bright / next (day)',hint:'あか・めい'},
+        ]
+      },
+    ]
+  },
+  // ── KJW SECTION 3: Direction & Size ──
+  { book:'kjw', category:'Kanji Way · Section 3', catJP:'ほうこう・おおきさ', catIcon:'方',
+    catDesc:'Direction, position, size and degree kanji',
+    items:[
+      { id:'kjw-s3-direction', name:'Power Keys: Direction', jp:'ほうこう・いち', type:'kanji', prompt:'meaning', desc:'Compass points and spatial position',
+        data:[
+          {q:'上',a:'up / above',hint:'うえ・じょう'},{q:'下',a:'down / below',hint:'した・か'},
+          {q:'左',a:'left',hint:'ひだり・さ'},{q:'右',a:'right',hint:'みぎ・う'},
+          {q:'中',a:'middle / inside',hint:'なか・ちゅう'},{q:'外',a:'outside',hint:'そと・がい'},
+          {q:'東',a:'east',hint:'ひがし・とう'},{q:'西',a:'west',hint:'にし・せい'},
+          {q:'南',a:'south',hint:'みなみ・なん'},{q:'北',a:'north',hint:'きた・ほく'},
+          {q:'内',a:'inside / within',hint:'うち・ない'},{q:'間',a:'between / space',hint:'あいだ・かん'},
+          {q:'横',a:'beside / horizontal',hint:'よこ・おう'},{q:'前',a:'front / before',hint:'まえ・ぜん'},
+          {q:'後',a:'behind / after',hint:'うしろ・ご'},
+        ]
+      },
+      { id:'kjw-s3-size', name:'Power Keys: Size & Degree', jp:'おおきさ・ていど', type:'kanji', prompt:'meaning', desc:'Size, quality, and degree',
+        data:[
+          {q:'大',a:'big / large',hint:'おお・だい'},{q:'小',a:'small',hint:'ちい・しょう'},
+          {q:'多',a:'many / much',hint:'おお・た'},{q:'少',a:'few / little',hint:'すく・しょう'},
+          {q:'高',a:'high / tall / expensive',hint:'たか・こう'},{q:'低',a:'low',hint:'ひく・てい'},
+          {q:'長',a:'long',hint:'なが・ちょう'},{q:'短',a:'short',hint:'みじか・たん'},
+          {q:'広',a:'wide / spacious',hint:'ひろ・こう'},{q:'新',a:'new',hint:'あたら・しん'},
+          {q:'古',a:'old',hint:'ふる・こ'},{q:'強',a:'strong',hint:'つよ・きょう'},
+          {q:'弱',a:'weak',hint:'よわ・じゃく'},{q:'重',a:'heavy',hint:'おも・じゅう'},
+          {q:'軽',a:'light (weight)',hint:'かる・けい'},
+        ]
+      },
+    ]
+  },
+  // ── KJW SECTION 4: People & Society ──
+  { book:'kjw', category:'Kanji Way · Section 4', catJP:'ひと・しゃかい', catIcon:'社',
+    catDesc:'People, family, society and institutions',
+    items:[
+      { id:'kjw-s4-family', name:'Power Keys: Family', jp:'かぞくの字', type:'kanji', prompt:'meaning', desc:'Family relationship kanji',
+        data:[
+          {q:'父',a:'father',hint:'ちち・ふ'},{q:'母',a:'mother',hint:'はは・ぼ'},
+          {q:'兄',a:'older brother',hint:'あに・けい'},{q:'姉',a:'older sister',hint:'あね・し'},
+          {q:'弟',a:'younger brother',hint:'おとうと・てい'},{q:'妹',a:'younger sister',hint:'いもうと・まい'},
+          {q:'子',a:'child',hint:'こ・し'},{q:'男',a:'man / male',hint:'おとこ・だん'},
+          {q:'女',a:'woman / female',hint:'おんな・じょ'},{q:'夫',a:'husband',hint:'おっと・ふ'},
+          {q:'妻',a:'wife',hint:'つま・さい'},{q:'親',a:'parent',hint:'おや・しん'},
+          {q:'友',a:'friend',hint:'とも・ゆう'},{q:'人',a:'person',hint:'ひと・じん'},
+          {q:'家',a:'house / family',hint:'いえ・か'},
+        ]
+      },
+      { id:'kjw-s4-society', name:'Power Keys: Work & Society', jp:'しごと・しゃかい', type:'kanji', prompt:'meaning', desc:'Work, institutions, and society',
+        data:[
+          {q:'国',a:'country / nation',hint:'くに・こく'},{q:'語',a:'language / words',hint:'ご・かたる'},
+          {q:'学',a:'study / learn',hint:'まな・がく'},{q:'校',a:'school',hint:'こう'},
+          {q:'社',a:'company / shrine',hint:'しゃ'},{q:'会',a:'meeting / gathering',hint:'かい'},
+          {q:'金',a:'gold / money',hint:'きん・かね'},{q:'銀',a:'silver',hint:'ぎん'},
+          {q:'店',a:'shop / store',hint:'みせ・てん'},{q:'市',a:'city / market',hint:'いち・し'},
+          {q:'町',a:'town / block',hint:'まち・ちょう'},{q:'村',a:'village',hint:'むら・そん'},
+          {q:'病',a:'illness / sick',hint:'やまい・びょう'},{q:'院',a:'institution / hospital',hint:'いん'},
+          {q:'局',a:'bureau / office',hint:'きょく'},
+        ]
+      },
+    ]
+  },
+  // ── KJW SECTION 5: Actions & Movement ──
+  { book:'kjw', category:'Kanji Way · Section 5', catJP:'どうさの漢字', catIcon:'動',
+    catDesc:'Movement, action, and making kanji',
+    items:[
+      { id:'kjw-s5-movement', name:'Power Keys: Movement', jp:'うごきの字', type:'kanji', prompt:'meaning', desc:'Motion and movement kanji',
+        data:[
+          {q:'行',a:'go',hint:'い・こう'},{q:'来',a:'come',hint:'く・らい'},
+          {q:'帰',a:'return / go home',hint:'かえ・き'},{q:'入',a:'enter',hint:'はい・にゅう'},
+          {q:'出',a:'exit / go out',hint:'で・しゅつ'},{q:'乗',a:'ride / board',hint:'の・じょう'},
+          {q:'降',a:'get off / descend',hint:'お・こう'},{q:'走',a:'run',hint:'はし・そう'},
+          {q:'歩',a:'walk',hint:'ある・ほ'},{q:'止',a:'stop',hint:'と・し'},
+          {q:'起',a:'wake up / rise',hint:'お・き'},{q:'立',a:'stand',hint:'た・りつ'},
+          {q:'座',a:'sit',hint:'すわ・ざ'},{q:'泳',a:'swim',hint:'およ・えい'},
+          {q:'飛',a:'fly',hint:'と・ひ'},
+        ]
+      },
+      { id:'kjw-s5-actions', name:'Power Keys: Making & Doing', jp:'つくる・する字', type:'kanji', prompt:'meaning', desc:'Creation, communication and thought kanji',
+        data:[
+          {q:'作',a:'make / create',hint:'つく・さく'},{q:'食',a:'eat / food',hint:'た・しょく'},
+          {q:'飲',a:'drink',hint:'の・いん'},{q:'書',a:'write',hint:'か・しょ'},
+          {q:'読',a:'read',hint:'よ・どく'},{q:'見',a:'see / look',hint:'み・けん'},
+          {q:'聞',a:'hear / ask',hint:'き・もん'},{q:'話',a:'speak / story',hint:'はな・わ'},
+          {q:'買',a:'buy',hint:'か・ばい'},{q:'売',a:'sell',hint:'う・ばい'},
+          {q:'使',a:'use',hint:'つか・し'},{q:'思',a:'think',hint:'おも・し'},
+          {q:'知',a:'know',hint:'し・ち'},{q:'分',a:'understand / divide',hint:'わ・ぶん'},
+          {q:'言',a:'say / speak',hint:'い・げん'},
+        ]
+      },
+    ]
+  },
+  // ── KJW SECTION 6: Compounds & JLPT N5 ──
+  { book:'kjw', category:'Kanji Way · Section 6', catJP:'じゅくご・N5', catIcon:'字',
+    catDesc:'Common compound words built from power-key kanji',
+    items:[
+      { id:'kjw-s6-compounds', name:'Key Compounds', jp:'じゅくご', type:'kanji', prompt:'meaning', desc:'High-frequency two-kanji compounds',
+        data:[
+          {q:'日本',a:'Japan',hint:'にほん/にっぽん'},{q:'電話',a:'telephone',hint:'でんわ'},
+          {q:'電車',a:'train (electric)',hint:'でんしゃ'},{q:'学生',a:'student',hint:'がくせい'},
+          {q:'先生',a:'teacher',hint:'せんせい'},{q:'会社',a:'company',hint:'かいしゃ'},
+          {q:'銀行',a:'bank',hint:'ぎんこう'},{q:'病院',a:'hospital',hint:'びょういん'},
+          {q:'図書館',a:'library',hint:'としょかん'},{q:'大学',a:'university',hint:'だいがく'},
+          {q:'空港',a:'airport',hint:'くうこう'},{q:'東京',a:'Tokyo (East Capital)',hint:'とうきょう'},
+          {q:'日曜日',a:'Sunday',hint:'にちようび'},{q:'毎日',a:'every day',hint:'まいにち'},
+          {q:'今日',a:'today',hint:'きょう/こんにち'},
+        ]
+      },
+      { id:'kjw-s6-adj-kanji', name:'Descriptive Kanji', jp:'けいようしの漢字', type:'kanji', prompt:'meaning', desc:'Adjective and quality kanji',
+        data:[
+          {q:'美',a:'beautiful',hint:'うつく・び'},{q:'悪',a:'bad / evil',hint:'わる・あく'},
+          {q:'良',a:'good',hint:'よ・りょう'},{q:'早',a:'early / fast',hint:'はや・そう'},
+          {q:'遅',a:'late / slow',hint:'おそ・ち'},{q:'明',a:'bright / clear',hint:'あか・めい'},
+          {q:'暗',a:'dark',hint:'くら・あん'},{q:'暑',a:'hot (weather)',hint:'あつ・しょ'},
+          {q:'寒',a:'cold (weather)',hint:'さむ・かん'},{q:'難',a:'difficult',hint:'むずか・なん'},
+          {q:'易',a:'easy',hint:'やさ・い'},{q:'楽',a:'comfortable / fun',hint:'たの・らく'},
+          {q:'忙',a:'busy',hint:'いそが・ぼう'},{q:'暇',a:'free time / leisure',hint:'ひま・か'},
+          {q:'正',a:'correct / right',hint:'ただ・せい'},
+        ]
+      },
+    ]
+  },
+];
+
+// ══════════════════════════════════════════════
+//  STORAGE HELPERS
+// ══════════════════════════════════════════════
+function loadDB() {
+  try { return JSON.parse(localStorage.getItem('jpGrapeVineDB') || '{}'); } catch(e) { return {}; }
+}
+function saveDB(db) {
+  try { localStorage.setItem('jpGrapeVineDB', JSON.stringify(db)); } catch(e) {}
+}
+
+function getUsers() {
+  const db = loadDB();
+  return db.users || {};
+}
+
+function getUserData(name) {
+  const db = loadDB();
+  return (db.users || {})[name] || { name, totalQ:0, totalCorrect:0, lessons:{} };
+}
+
+function saveUserData(data) {
+  const db = loadDB();
+  if (!db.users) db.users = {};
+  db.users[data.name] = data;
+  saveDB(db);
+}
+
+// ══════════════════════════════════════════════
+//  APP STATE
+// ══════════════════════════════════════════════
+let currentUser = null;
+let activeBookFilter = "all";
+let currentLesson = null;
+let quizQueue = [];
+let quizIndex = 0;
+let quizCorrect = 0;
+let quizWrong = 0;
+let answered = false;
+
+// ══════════════════════════════════════════════
+//  PAGE NAVIGATION
+// ══════════════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ══════════════════════════════════════════════
+//  LOGIN
+// ══════════════════════════════════════════════
+function initLogin() {
+  const users = getUsers();
+  const names = Object.keys(users);
+  const secEl = document.getElementById('existingSection');
+  const listEl = document.getElementById('existingList');
+  listEl.innerHTML = '';
+  if (names.length > 0) {
+    secEl.style.display = '';
+    names.forEach(n => {
+      const chip = document.createElement('button');
+      chip.className = 'existing-chip';
+      chip.textContent = n;
+      chip.onclick = () => { document.getElementById('nameInput').value = n; doLogin(); };
+      listEl.appendChild(chip);
+    });
+  } else {
+    secEl.style.display = 'none';
+  }
+  document.getElementById('nameInput').value = '';
+  document.getElementById('nameInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+}
+
+function doLogin() {
+  const raw = document.getElementById('nameInput').value.trim();
+  if (!raw) return;
+  currentUser = getUserData(raw);
+  renderDash();
+  showPage('dashPage');
+}
+
+function goToLogin() {
+  showPage('loginPage');
+  initLogin();
+}
+
+// ══════════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════════
+function renderDash() {
+  const u = currentUser;
+  document.getElementById('headerName').textContent = u.name;
+
+  // welcome text
+  const isNew = u.totalQ === 0;
+  document.getElementById('welcomeJP').textContent = isNew ? 'ようこそ！' : 'おかえり！';
+  document.getElementById('welcomeSub').textContent = isNew
+    ? `Welcome, ${u.name}! Choose a lesson to begin.`
+    : `Welcome back, ${u.name}! Keep going!`;
+
+  // stats
+  document.getElementById('statTotal').textContent = u.totalQ;
+  document.getElementById('statCorrect').textContent = u.totalCorrect;
+  const pct = u.totalQ > 0 ? Math.round(u.totalCorrect / u.totalQ * 100) + '%' : '—';
+  document.getElementById('statPct').textContent = pct;
+  const doneCount = Object.values(u.lessons).filter(l => l.attempts > 0).length;
+  document.getElementById('statLessons').textContent = doneCount;
+
+  renderCategories();
+}
+
+function renderCategories() {
+  const u = currentUser;
+  const catEl = document.getElementById('categoriesEl');
+  catEl.innerHTML = '';
+  const filtered = activeBookFilter === 'all' ? LESSONS : LESSONS.filter(c => c.book === activeBookFilter);
+  filtered.forEach(cat => {
+    const block = document.createElement('div');
+    block.className = 'category-block';
+    const bookBadge = cat.book === 'jbp'
+      ? '<span style="font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;padding:.15rem .5rem;border-radius:2px;background:rgba(26,75,139,.12);color:#1a4b8b;margin-left:.5rem">JBP</span>'
+      : '<span style="font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;padding:.15rem .5rem;border-radius:2px;background:rgba(75,0,130,.12);color:#4b0082;margin-left:.5rem">Kanji Way</span>';
+    const borderColor = cat.book === 'jbp' ? '#1a4b8b' : '#4b0082';
+    block.innerHTML = `
+      <div class="category-header" style="border-left:4px solid ${borderColor}">
+        <div class="cat-icon">${cat.catIcon}</div>
+        <div>
+          <div class="cat-title">${cat.category} ${bookBadge} <span style="font-family:'Noto Serif JP',serif;font-size:.82rem;color:var(--muted)">${cat.catJP}</span></div>
+          <div class="cat-desc">${cat.catDesc}</div>
+        </div>
+      </div>
+      <div class="lesson-grid" id="grid-${cat.category.replace(/\s/g,'_')}"></div>
+    `;
+    catEl.appendChild(block);
+    const grid = block.querySelector('.lesson-grid');
+    cat.items.forEach(lesson => {
+      const ls = u.lessons[lesson.id];
+      const btn = document.createElement('button');
+      btn.className = 'lesson-btn';
+      let badge = '';
+      if (ls && ls.attempts > 0) {
+        const p = Math.round(ls.correct / ls.total * 100);
+        const cls = p >= 80 ? 'badge-good' : p >= 50 ? 'badge-mid' : 'badge-low';
+        badge = `<span class="lesson-score-badge ${cls}">${p}%</span>`;
+      }
+      btn.innerHTML = `${badge}
+        <span class="lesson-name">${lesson.name}</span>
+        <span class="lesson-jp">${lesson.jp}</span>
+        <span class="lesson-count">${lesson.data.length} items · ${lesson.desc}</span>`;
+      btn.onclick = () => startLesson(lesson);
+      grid.appendChild(btn);
+    });
+  });
+}
+
+function goToDash() {
+  renderDash();
+  showPage('dashPage');
+}
+
+// ══════════════════════════════════════════════
+//  QUIZ
+// ══════════════════════════════════════════════
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function startLesson(lesson) {
+  currentLesson = lesson;
+  quizQueue = shuffle(lesson.data).slice(0, Math.min(10, lesson.data.length));
+  quizIndex = 0;
+  quizCorrect = 0;
+  quizWrong = 0;
+  answered = false;
+
+  document.getElementById('quizLessonTitle').textContent = lesson.name;
+  document.getElementById('quizLessonJP').textContent = lesson.jp;
+  document.getElementById('qTotalDisp').textContent = quizQueue.length;
+
+  showPage('quizPage');
+  renderQuestion();
+}
+
+function typeTagClass(type) {
+  const map = { hiragana:'tag-hiragana', katakana:'tag-katakana', kanji:'tag-kanji', vocab:'tag-vocab', grammar:'tag-grammar' };
+  return map[type] || 'tag-vocab';
+}
+
+function renderQuestion() {
+  const item = quizQueue[quizIndex];
+  const lesson = currentLesson;
+  answered = false;
+
+  document.getElementById('qNumDisp').textContent = quizIndex + 1;
+  const pct = (quizIndex / quizQueue.length * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  // build wrong choices from same lesson pool
+  let others = currentLesson.data.filter(x => x.q !== item.q);
+  others = shuffle(others).slice(0, 3);
+  const allChoices = shuffle([item, ...others]);
+
+  const isSmall = item.q.length > 4;
+
+  let promptText = '';
+  if (lesson.prompt === 'romaji') promptText = 'Select the correct romaji reading';
+  else if (lesson.prompt === 'meaning') promptText = 'Select the correct meaning';
+
+  const wrap = document.getElementById('qCardWrap');
+  wrap.innerHTML = '';
+  const card = document.createElement('div');
+  card.className = 'q-card';
+  card.innerHTML = `
+    <div class="q-num">Question ${quizIndex + 1} of ${quizQueue.length}</div>
+    <span class="type-tag ${typeTagClass(lesson.type)}">${lesson.type}</span>
+    <div class="char-main${isSmall ? ' small-char' : ''}">${item.q}</div>
+    <div class="char-hint">${item.hint || ''}</div>
+    <div class="char-prompt">${promptText}</div>
+    <div class="choices" id="choicesEl"></div>
+    <div class="q-feedback" id="feedbackEl"></div>
+    <button class="next-btn" id="nextBtn" onclick="advanceQuiz()">
+      ${quizIndex + 1 < quizQueue.length ? 'Next →' : 'See Results'}
+    </button>
+  `;
+  wrap.appendChild(card);
+
+  const choicesEl = document.getElementById('choicesEl');
+  allChoices.forEach(ch => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    // display answer text
+    const displayText = lesson.prompt === 'romaji' ? ch.a : (ch.a.length > 30 ? ch.a : ch.a);
+    btn.innerHTML = `<span class="c-en">${displayText}</span>`;
+    btn.onclick = () => checkAnswer(btn, ch, item);
+    choicesEl.appendChild(btn);
+  });
+}
+
+function checkAnswer(btn, choice, item) {
+  if (answered) return;
+  answered = true;
+
+  const isCorrect = choice.q === item.q;
+  const fb = document.getElementById('feedbackEl');
+
+  // mark buttons
+  document.querySelectorAll('.choice').forEach(b => {
+    b.disabled = true;
+    const label = b.querySelector('.c-en').textContent;
+    if (label === item.a) b.classList.add('correct');
+  });
+
+  if (isCorrect) {
+    btn.classList.add('correct');
+    quizCorrect++;
+    fb.textContent = '✓ 正解！ Correct!';
+    fb.className = 'q-feedback show ok';
+  } else {
+    btn.classList.add('wrong');
+    quizWrong++;
+    fb.textContent = `✗ Answer: ${item.a}`;
+    fb.className = 'q-feedback show bad';
+  }
+
+  document.getElementById('nextBtn').classList.add('show');
+}
+
+function advanceQuiz() {
+  quizIndex++;
+  if (quizIndex >= quizQueue.length) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  const total = quizQueue.length;
+  const pct = Math.round(quizCorrect / total * 100);
+
+  // save to user data
+  const ls = currentUser.lessons[currentLesson.id] || { attempts:0, correct:0, total:0 };
+  ls.attempts++;
+  ls.correct += quizCorrect;
+  ls.total += total;
+  currentUser.lessons[currentLesson.id] = ls;
+  currentUser.totalQ += total;
+  currentUser.totalCorrect += quizCorrect;
+  saveUserData(currentUser);
+
+  let jpMsg = '', enMsg = '';
+  if (pct === 100) { jpMsg = '完璧！'; enMsg = 'Perfect score — outstanding!'; }
+  else if (pct >= 80) { jpMsg = 'よくできました！'; enMsg = 'Great work! Keep it up.'; }
+  else if (pct >= 60) { jpMsg = 'まあまあです'; enMsg = 'Good effort — review and try again!'; }
+  else { jpMsg = 'がんばれ！'; enMsg = 'Don\'t give up — practice makes perfect!'; }
+
+  document.getElementById('progressFill').style.width = '100%';
+
+  const wrap = document.getElementById('qCardWrap');
+  wrap.innerHTML = `
+    <div class="result-card">
+      <div class="result-jp">${jpMsg}</div>
+      <div class="result-score-big">${quizCorrect}/${total} <span class="result-pct">${pct}%</span></div>
+      <div class="result-msg">${enMsg}</div>
+      <div class="result-breakdown">
+        <span>✓ Correct <strong>${quizCorrect}</strong></span>
+        <span>✗ Wrong <strong>${quizWrong}</strong></span>
+        <span>Accuracy <strong>${pct}%</strong></span>
+      </div>
+      <div class="result-actions">
+        <button class="btn-red" onclick="startLesson(currentLesson)">Try Again</button>
+        <button class="btn-outline" onclick="goToDash()">← All Lessons</button>
+      </div>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+initLogin();
+</script>
+
+<!-- Install Banner -->
+<div id="installBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;
+  background:#fff;border-top:1.5px solid #d8cfc0;padding:1rem 1.25rem;
+  align-items:center;justify-content:space-between;gap:1rem;box-shadow:0 -4px 20px rgba(18,16,14,.12);">
+  <div>
+    <div style="font-family:'Zen Old Mincho',serif;font-size:.92rem;font-weight:700;color:#12100e">Install The Japanese Grape Vine</div>
+    <div style="font-size:.72rem;color:#7a7060;letter-spacing:.05em;margin-top:.15rem">Add to home screen for offline access</div>
+  </div>
+  <div style="display:flex;gap:.5rem;flex-shrink:0">
+    <button onclick="dismissInstall()" style="font-family:'Inconsolata',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;padding:.45rem .9rem;border:1.5px solid #d8cfc0;background:transparent;color:#7a7060;cursor:pointer;border-radius:2px">Later</button>
+    <button onclick="doInstall()" style="font-family:'Inconsolata',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;padding:.45rem 1rem;background:#b5261e;color:#fff;border:none;cursor:pointer;border-radius:2px">Install</button>
+  </div>
+</div>
+<script>
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; document.getElementById('installBanner').style.display = 'flex'; });
+function doInstall() { if(!deferredPrompt) return; deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => { deferredPrompt = null; dismissInstall(); }); }
+function dismissInstall() { document.getElementById('installBanner').style.display = 'none'; }
+window.addEventListener('appinstalled', () => dismissInstall());
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); }); }
+</script>
+</body>
+</html>
