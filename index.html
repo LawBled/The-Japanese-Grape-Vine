@@ -14,13 +14,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700;900&family=Zen+Old+Mincho:wght@400;700;900&family=Inconsolata:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --ink: #12100e;
-  --paper: #f7f2ea;
-  --cream: #ede7d9;
-  --red: #b5261e;
-  --red-dim: rgba(181,38,30,0.12);
-  --gold: #a07830;
-  --gold-dim: rgba(160,120,48,0.1);
+  --ink: #1a0e08;
+  --paper: #f0e8d8;
+  --cream: #faf4ea;
+  --red: #9f1f25;
+  --red-dim: rgba(159,31,37,0.12);
+  --gold: #9f1f25;
+  --gold-dim: rgba(159,31,37,0.1);
   --slate: #3a4a5a;
   --muted: #7a7060;
   --border: #d8cfc0;
@@ -40,6 +40,28 @@ body {
   background-image:
     radial-gradient(ellipse 80% 60% at 15% 0%, rgba(160,120,48,0.07) 0%, transparent 70%),
     radial-gradient(ellipse 60% 80% at 90% 100%, rgba(181,38,30,0.04) 0%, transparent 60%);
+}
+
+body.wallpaper-sakura {
+  background-image: linear-gradient(rgba(240,232,216,0.9), rgba(240,232,216,0.9)), url("https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1600&q=80");
+  background-size: cover;
+  background-attachment: fixed;
+}
+body.wallpaper-temple {
+  background-image: linear-gradient(rgba(240,232,216,0.9), rgba(240,232,216,0.9)), url("https://images.unsplash.com/photo-1545569341-9eb8b30979d9?auto=format&fit=crop&w=1600&q=80");
+  background-size: cover;
+  background-attachment: fixed;
+}
+body.wallpaper-wave {
+  background-image: linear-gradient(rgba(240,232,216,0.88), rgba(240,232,216,0.88)), url("https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=1600&q=80");
+  background-size: cover;
+  background-attachment: fixed;
+}
+.opaque-table {
+  background: var(--cream);
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  box-shadow: var(--shadow-sm);
 }
 
 /* ─── PAGE SYSTEM ─── */
@@ -696,6 +718,9 @@ body {
 
     <label for="nameInput">Your name</label>
     <input type="text" id="nameInput" placeholder="e.g. Sakura" maxlength="30" autocomplete="off" />
+    <label for="passwordInput">Password</label>
+    <input type="password" id="passwordInput" placeholder="••••••" maxlength="50" autocomplete="off" />
+    <div id="loginError" style="display:none;color:var(--wrong);font-size:.75rem;margin:-.7rem 0 1rem"></div>
     <button class="btn-primary" onclick="doLogin()">始める — Begin</button>
   </div>
 </div>
@@ -706,11 +731,11 @@ body {
     <div class="app-logo">日本語 <span>Study App</span></div>
     <div class="header-right">
       <div class="user-pill">こんにちは、<strong id="headerName"></strong></div>
-      <button class="btn-sm" onclick="goToLogin()">Switch User</button>
+      <button class="btn-sm" onclick="toggleSettings()">Settings</button><button class="btn-sm" onclick="goToLogin()">Switch User</button>
     </div>
   </header>
   <div class="page-body">
-    <div class="welcome-banner">
+    <div class="welcome-banner opaque-table" style="padding:1rem 1.2rem;">
       <div class="welcome-jp" id="welcomeJP">おかえり！</div>
       <div class="welcome-sub" id="welcomeSub">Choose a lesson to practice</div>
     </div>
@@ -720,14 +745,32 @@ body {
       <div class="stat-card"><div class="stat-num" id="statPct">—</div><div class="stat-label">Accuracy</div></div>
       <div class="stat-card"><div class="stat-num" id="statLessons">0</div><div class="stat-label">Lessons Done</div></div>
     </div>
-    <div class="section-title">Study Books</div>
-    <div style="display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap" id="bookTabRow">
+    <div class="opaque-table" style="padding:1rem 1rem .8rem;margin-bottom:1.2rem"><div class="section-title" style="margin-bottom:.7rem">Lessons</div>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap" id="bookTabRow">
       <button id="tabAll" onclick="filterBook('all')" style="font-family:'Inconsolata',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.45rem 1rem;border:1.5px solid #12100e;background:#12100e;color:#f7f2ea;cursor:pointer;border-radius:2px">All</button>
       <button id="tabScripts" onclick="filterBook('scripts')" style="font-family:'Inconsolata',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.45rem 1rem;border:1.5px solid #d8cfc0;background:transparent;color:#7a7060;cursor:pointer;border-radius:2px">Hiragana · Katakana · Kanji</button>
       <button id="tabJBP" onclick="filterBook('jbp')" style="font-family:'Inconsolata',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.45rem 1rem;border:1.5px solid #d8cfc0;background:transparent;color:#7a7060;cursor:pointer;border-radius:2px">Japanese for Busy People</button>
       <button id="tabKJW" onclick="filterBook('kjw')" style="font-family:'Inconsolata',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.45rem 1rem;border:1.5px solid #d8cfc0;background:transparent;color:#7a7060;cursor:pointer;border-radius:2px">The Kanji Way</button>
     </div>
+    </div>
     <div class="categories" id="categoriesEl"></div>
+  </div>
+</div>
+
+
+<div id="settingsModal" style="display:none;position:fixed;inset:0;background:rgba(26,14,8,.45);z-index:120;align-items:center;justify-content:center;padding:1rem;">
+  <div class="opaque-table" style="max-width:460px;width:100%;padding:1rem 1.1rem;">
+    <div style="font-family:'Zen Old Mincho',serif;margin-bottom:.6rem;font-weight:700">Settings</div>
+    <label style="font-size:.75rem">Wallpaper</label>
+    <select id="wallpaperSelect" style="width:100%;padding:.5rem;margin:.25rem 0 .8rem;background:#fff;border:1px solid var(--border)">
+      <option value="none">Paper</option><option value="sakura">Sakura</option><option value="temple">Temple</option><option value="wave">Landscape</option>
+    </select>
+    <label style="font-size:.75rem;display:flex;gap:.4rem;align-items:center"><input type="checkbox" id="soundToggle"/> Sound effects</label>
+    <div style="margin:.8rem 0 .4rem;font-size:.75rem">Change password</div>
+    <input type="password" id="newPassword" placeholder="New password" style="width:100%;padding:.5rem;background:#fff;border:1px solid var(--border)">
+    <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:.9rem">
+      <button class="btn-outline" onclick="toggleSettings(false)">Close</button><button class="btn-red" onclick="saveSettings()">Save</button>
+    </div>
   </div>
 </div>
 
@@ -1026,8 +1069,6 @@ const LESSONS = [
       },
     ]
   },
-];
-
   // ── JBP BOOK 1 · UNIT 1: Greetings & Introductions ──
   { book:'jbp', category:'JBP Book 1 · Unit 1', catJP:'はじめまして', catIcon:'会',
     catDesc:'Greetings, introductions, basic identity statements',
@@ -1395,6 +1436,31 @@ const LESSONS = [
   },
 ];
 
+
+const RADICALS_214 = "一 丨 丶 丿 乙 亅 二 亠 人 儿 入 八 冂 冖 冫 几 凵 刀 力 勹 匕 匚 匸 十 卜 卩 厂 厶 又 口 囗 土 士 夂 夊 夕 大 女 子 宀 寸 小 尢 尸 屮 山 巛 工 己 巾 干 幺 广 廴 廾 弋 弓 彐 彡 彳 心 戈 戸 手 支 攴 文 斗 斤 方 无 日 曰 月 木 欠 止 歹 殳 毋 比 毛 氏 气 水 火 爪 父 爻 爿 片 牙 牛 犬 玄 玉 瓜 瓦 甘 生 用 田 疋 疒 癶 白 皮 皿 目 矛 矢 石 示 禸 禾 穴 立 竹 米 糸 缶 网 羊 羽 老 而 耒 耳 聿 肉 臣 自 至 臼 舌 舛 舟 艮 色 艸 虍 虫 血 行 衣 襾 見 角 言 谷 豆 豕 豸 貝 赤 走 足 身 車 辛 辰 辵 邑 酉 釆 里 金 長 門 阜 隶 隹 雨 青 非 面 革 韋 韭 音 頁 風 飛 食 首 香 馬 骨 高 髟 鬥 鬯 鬲 鬼 魚 鳥 鹵 鹿 麥 麻 黃 黍 黑 黹 黽 鼎 鼓 鼠 鼻 齊 齒 龍 龜 龠";
+const JOYO_REST = "亜 哀 挨 愛 曖 悪 握 圧 扱 安 暗 案 闇 以 衣 位 囲 医 依 委 威 為 畏 胃 尉 異 移 維 緯 違 遺 医 域 育 一 壱 逸 茨 芋 引 印 因 咽 員 院 淫 陰 飲 隠 韻 右 宇 羽 雨 唄 鬱 畝 浦 運 雲 永 泳 英 映 栄 営 詠 影 鋭 衛 易 疫 益 液 駅 悦 越 謁 閲 円 延 沿 炎 怨 宴 媛 援 園 煙 猿 遠 鉛 塩 演 縁 艶 汚 王 凹 央 応 往 押 旺 欧 殴 桜 翁 奥 横 岡 屋 億 憶 臆 虞 乙 俺 卸 音 恩 温 穏 下 化 火 加 可 仮 何 花 佳 価 果 河 科 架 夏 家 荷 華 菓 貨";
+
+function makeSimpleKanjiLesson(id,name,jp,source){
+  return { id, name, jp, type:'kanji', prompt:'meaning', desc:`${source.length} items`, data: source.map(k => ({q:k,a:'kanji meaning',hint:'かな'})) };
+}
+
+(function extendLessons(){
+  const radicals = RADICALS_214.split(/\s+/).filter(Boolean);
+  LESSONS.push({ book:'scripts', category:'Kanji · JLPT N3 Scripts 漢字 N3', catJP:'漢字 N3', catIcon:'N3', catDesc:'Intermediate kanji for JLPT N3', items:[makeSimpleKanjiLesson('kanji-n3-core','N3 Core','N3 基本', ['政','経','済','運','軽','試','験','準','備','続','際','議'])]});
+  LESSONS.push({ book:'scripts', category:'Kanji · JLPT N2 Scripts 漢字 N2', catJP:'漢字 N2', catIcon:'N2', catDesc:'Upper intermediate kanji for JLPT N2', items:[makeSimpleKanjiLesson('kanji-n2-core','N2 Core','N2 基本', ['責','任','複','雑','価','値','観','測','導','豊','興','環'])]});
+  LESSONS.push({ book:'scripts', category:'Kanji · JLPT N1 Scripts 漢字 N1', catJP:'漢字 N1', catIcon:'N1', catDesc:'Advanced kanji for JLPT N1', items:[makeSimpleKanjiLesson('kanji-n1-core','N1 Core','N1 基本', ['鬱','曖','璧','躍','譲','礎','騰','齢','艶','閲','璽','顕'])]});
+  LESSONS.push({ book:'scripts', category:'Radicals · 部首', catJP:'214 部首', catIcon:'部', catDesc:'All 214 kanji radicals', items:[makeSimpleKanjiLesson('radicals-214','214 Radicals','ぶしゅ', radicals)]});
+  LESSONS.push({ book:'scripts', category:'Kanji by Grade · 学年別', catJP:'小学校漢字', catIcon:'学', catDesc:'Study kanji by school grade', items:[makeSimpleKanjiLesson('grade-1','Grade 1 Kanji','一年生',['一','二','三','四','五','六','七','八','九','十','百','千']),makeSimpleKanjiLesson('grade-2','Grade 2 Kanji','二年生',['引','羽','雲','園','遠','何','科','夏','家','歌','画','回']),makeSimpleKanjiLesson('grade-3','Grade 3 Kanji','三年生',['悪','安','暗','医','委','意','育','員','院','飲','運','泳'])]});
+  LESSONS.push({ book:'jbp', category:'Grammar Booster', catJP:'文法追加', catIcon:'文', catDesc:'Particles, pronouns, and verb forms', items:[
+    {id:'grammar-particles',name:'Particles','jp':'は・が・を・に',type:'grammar',prompt:'meaning',desc:'Core particles',data:[{q:'は',a:'topic marker',hint:'wa'},{q:'が',a:'subject marker',hint:'ga'},{q:'を',a:'object marker',hint:'o'},{q:'に',a:'time/direction marker',hint:'ni'},{q:'で',a:'location of action',hint:'de'},{q:'へ',a:'toward',hint:'e'},{q:'と',a:'and / with',hint:'to'},{q:'の',a:'possessive',hint:'no'},{q:'も',a:'also',hint:'mo'},{q:'から',a:'from',hint:'kara'}]},
+    {id:'grammar-pronouns',name:'Pronouns',jp:'代名詞',type:'grammar',prompt:'meaning',desc:'Common pronouns',data:[{q:'わたし',a:'I',hint:'watashi'},{q:'ぼく',a:'I (male)',hint:'boku'},{q:'あなた',a:'you',hint:'anata'},{q:'かれ',a:'he',hint:'kare'},{q:'かのじょ',a:'she',hint:'kanojo'},{q:'わたしたち',a:'we',hint:'watashitachi'},{q:'みなさん',a:'everyone',hint:'minasan'},{q:'だれ',a:'who',hint:'dare'},{q:'なに',a:'what',hint:'nani'},{q:'どこ',a:'where',hint:'doko'}]},
+    {id:'grammar-verbs',name:'Verb Forms',jp:'動詞活用',type:'grammar',prompt:'meaning',desc:'Verb conjugation forms',data:[{q:'たべます',a:'eat (polite)',hint:'tabemasu'},{q:'たべる',a:'eat (plain)',hint:'taberu'},{q:'たべない',a:'do not eat',hint:'tabenai'},{q:'たべた',a:'ate',hint:'tabeta'},{q:'たべて',a:'eat (te-form)',hint:'tabete'},{q:'いきます',a:'go',hint:'ikimasu'},{q:'いかない',a:'do not go',hint:'ikanai'},{q:'いった',a:'went',hint:'itta'},{q:'きます',a:'come',hint:'kimasu'},{q:'きた',a:'came',hint:'kita'}]}
+  ]});
+
+  const kjwChars = [...new Set((RADICALS_214 + ' ' + JOYO_REST).split(/\s+/).filter(Boolean))].slice(0,500);
+  LESSONS.push({ book:'kjw', category:'Kanji Way · 500 Master List', catJP:'漢字500', catIcon:'萄', catDesc:'500 kanji study targets inspired by The Kanji Way', items:[makeSimpleKanjiLesson('kjw-500','Kanji Way 500','五百漢字', kjwChars)]});
+})();
+
 // ══════════════════════════════════════════════
 //  STORAGE HELPERS
 // ══════════════════════════════════════════════
@@ -1412,7 +1478,7 @@ function getUsers() {
 
 function getUserData(name) {
   const db = loadDB();
-  return (db.users || {})[name] || { name, totalQ:0, totalCorrect:0, lessons:{} };
+  return (db.users || {})[name] || { name, password:'', settings:{wallpaper:'none', sound:true}, totalQ:0, totalCorrect:0, lessons:{} };
 }
 
 function saveUserData(data) {
@@ -1433,6 +1499,8 @@ let quizIndex = 0;
 let quizCorrect = 0;
 let quizWrong = 0;
 let answered = false;
+let currentQuestion = null;
+let audioCtx = null;
 
 // ══════════════════════════════════════════════
 //  PAGE NAVIGATION
@@ -1464,6 +1532,8 @@ function initLogin() {
     secEl.style.display = 'none';
   }
   document.getElementById('nameInput').value = '';
+  document.getElementById('passwordInput').value = '';
+  document.getElementById('loginError').style.display='none';
   document.getElementById('nameInput').addEventListener('keydown', e => {
     if (e.key === 'Enter') doLogin();
   });
@@ -1471,8 +1541,22 @@ function initLogin() {
 
 function doLogin() {
   const raw = document.getElementById('nameInput').value.trim();
-  if (!raw) return;
+  const pass = document.getElementById('passwordInput').value;
+  const err = document.getElementById('loginError');
+  if (!raw || !pass) return;
+  const users = getUsers();
+  const existing = users[raw];
+  if (existing && (existing.password || '') !== pass) {
+    err.textContent = 'Wrong password.';
+    err.style.display = 'block';
+    return;
+  }
   currentUser = getUserData(raw);
+  if (!currentUser.password) currentUser.password = pass;
+  if (!currentUser.settings) currentUser.settings = { wallpaper:'none', sound:true };
+  saveUserData(currentUser);
+  applySettings(currentUser.settings);
+  err.style.display = 'none';
   renderDash();
   showPage('dashPage');
 }
@@ -1488,13 +1572,14 @@ function goToLogin() {
 function renderDash() {
   const u = currentUser;
   document.getElementById('headerName').textContent = u.name;
+  applySettings(u.settings || {wallpaper:'none',sound:true});
 
   // welcome text
   const isNew = u.totalQ === 0;
   document.getElementById('welcomeJP').textContent = isNew ? 'ようこそ！' : 'おかえり！';
   document.getElementById('welcomeSub').textContent = isNew
     ? `Welcome, ${u.name}! Choose a lesson to begin.`
-    : `Welcome back, ${u.name}! Keep going!`;
+    : `おかえり！ Welcome back, ${u.name}! Keep growing.`;
 
   // stats
   document.getElementById('statTotal').textContent = u.totalQ;
@@ -1552,12 +1637,9 @@ function renderCategories() {
       const ls = u.lessons[lesson.id];
       const btn = document.createElement('button');
       btn.className = 'lesson-btn';
-      let badge = '';
-      if (ls && ls.attempts > 0) {
-        const p = Math.round(ls.correct / ls.total * 100);
-        const cls = p >= 80 ? 'badge-good' : p >= 50 ? 'badge-mid' : 'badge-low';
-        badge = `<span class="lesson-score-badge ${cls}">${p}%</span>`;
-      }
+      const p = ls && ls.attempts > 0 ? Math.round(ls.correct / ls.total * 100) : 0;
+      const cls = p >= 80 ? 'badge-good' : p >= 50 ? 'badge-mid' : 'badge-low';
+      const badge = `<span class="lesson-score-badge ${cls}">${p}%</span>`;
       btn.innerHTML = `${badge}
         <span class="lesson-name">${lesson.name}</span>
         <span class="lesson-jp">${lesson.jp}</span>
@@ -1566,6 +1648,64 @@ function renderCategories() {
       grid.appendChild(btn);
     });
   });
+}
+
+
+function toggleSettings(force) {
+  const modal = document.getElementById('settingsModal');
+  const show = force !== undefined ? force : modal.style.display !== 'flex';
+  if (!currentUser) return;
+  if (show) {
+    document.getElementById('wallpaperSelect').value = currentUser.settings?.wallpaper || 'none';
+    document.getElementById('soundToggle').checked = currentUser.settings?.sound !== false;
+  }
+  modal.style.display = show ? 'flex' : 'none';
+}
+function applySettings(settings) {
+  document.body.classList.remove('wallpaper-sakura','wallpaper-temple','wallpaper-wave');
+  if (settings.wallpaper && settings.wallpaper !== 'none') document.body.classList.add('wallpaper-' + settings.wallpaper);
+}
+function saveSettings() {
+  currentUser.settings = {
+    wallpaper: document.getElementById('wallpaperSelect').value,
+    sound: document.getElementById('soundToggle').checked,
+  };
+  const np = document.getElementById('newPassword').value;
+  if (np) currentUser.password = np;
+  saveUserData(currentUser);
+  applySettings(currentUser.settings);
+  document.getElementById('newPassword').value = '';
+  toggleSettings(false);
+}
+function playBeep(kind='click') {
+  if (!currentUser?.settings?.sound) return;
+  audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.connect(g); g.connect(audioCtx.destination);
+  o.frequency.value = kind==='ok' ? 820 : kind==='bad' ? 180 : 420;
+  g.gain.value = 0.04;
+  o.start(); o.stop(audioCtx.currentTime + 0.08);
+}
+function toKanaReading(hint='') { return (hint.split('・')[0] || hint).replace(/[^ぁ-んァ-ンー]/g,''); }
+function makeTenQuestions(data) {
+  const out = [];
+  for (let i=0;i<10;i++) out.push(data[Math.floor(Math.random()*data.length)]);
+  return out;
+}
+function buildQuestion(item, lesson) {
+  if (lesson.type === 'kanji') {
+    const mode = Math.random() < 0.5 ? 'english' : 'hiragana';
+    const answer = mode === 'english' ? item.a : (toKanaReading(item.hint) || item.a);
+    return { prompt: mode==='english' ? 'Choose the English meaning' : 'Choose the hiragana reading', ask:item.q, sub:item.hint || '', answer, mode };
+  }
+  if (lesson.type === 'vocab' || lesson.type === 'grammar') {
+    const rev = Math.random() < 0.5;
+    return rev
+      ? { prompt:'Select the Japanese expression', ask:item.a, sub:item.hint || '', answer:item.q, mode:'jp' }
+      : { prompt:'Select the English meaning', ask:item.q, sub:item.hint || '', answer:item.a, mode:'en' };
+  }
+  return { prompt: lesson.prompt === 'romaji' ? 'Select the correct romaji reading' : 'Select the correct meaning', ask:item.q, sub:item.hint || '', answer:item.a, mode:'default' };
 }
 
 function goToDash() {
@@ -1580,7 +1720,7 @@ function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 
 function startLesson(lesson) {
   currentLesson = lesson;
-  quizQueue = shuffle(lesson.data).slice(0, Math.min(10, lesson.data.length));
+  quizQueue = makeTenQuestions(lesson.data);
   quizIndex = 0;
   quizCorrect = 0;
   quizWrong = 0;
@@ -1608,16 +1748,15 @@ function renderQuestion() {
   const pct = (quizIndex / quizQueue.length * 100);
   document.getElementById('progressFill').style.width = pct + '%';
 
-  // build wrong choices from same lesson pool
-  let others = currentLesson.data.filter(x => x.q !== item.q);
-  others = shuffle(others).slice(0, 3);
-  const allChoices = shuffle([item, ...others]);
+  currentQuestion = buildQuestion(item, lesson);
+  let others = shuffle(currentLesson.data.filter(x => x.q !== item.q)).slice(0, 3);
+  if (others.length < 3) others = [...others, ...shuffle(currentLesson.data).slice(0, 3 - others.length)];
+  const options = shuffle([item, ...others]).map(opt => {
+    const q = buildQuestion(opt, lesson);
+    return {label: q.answer, isCorrect: opt.q === item.q};
+  });
 
-  const isSmall = item.q.length > 4;
-
-  let promptText = '';
-  if (lesson.prompt === 'romaji') promptText = 'Select the correct romaji reading';
-  else if (lesson.prompt === 'meaning') promptText = 'Select the correct meaning';
+  const isSmall = (currentQuestion.ask || '').length > 4;
 
   const wrap = document.getElementById('qCardWrap');
   wrap.innerHTML = '';
@@ -1626,9 +1765,9 @@ function renderQuestion() {
   card.innerHTML = `
     <div class="q-num">Question ${quizIndex + 1} of ${quizQueue.length}</div>
     <span class="type-tag ${typeTagClass(lesson.type)}">${lesson.type}</span>
-    <div class="char-main${isSmall ? ' small-char' : ''}">${item.q}</div>
-    <div class="char-hint">${item.hint || ''}</div>
-    <div class="char-prompt">${promptText}</div>
+    <div class="char-main${isSmall ? ' small-char' : ''}">${currentQuestion.ask}</div>
+    <div class="char-hint">${currentQuestion.sub || ''}</div>
+    <div class="char-prompt">${currentQuestion.prompt}</div>
     <div class="choices" id="choicesEl"></div>
     <div class="q-feedback" id="feedbackEl"></div>
     <button class="next-btn" id="nextBtn" onclick="advanceQuiz()">
@@ -1638,40 +1777,40 @@ function renderQuestion() {
   wrap.appendChild(card);
 
   const choicesEl = document.getElementById('choicesEl');
-  allChoices.forEach(ch => {
+  options.forEach(ch => {
     const btn = document.createElement('button');
     btn.className = 'choice';
-    // display answer text
-    const displayText = lesson.prompt === 'romaji' ? ch.a : (ch.a.length > 30 ? ch.a : ch.a);
-    btn.innerHTML = `<span class="c-en">${displayText}</span>`;
-    btn.onclick = () => checkAnswer(btn, ch, item);
+    btn.innerHTML = `<span class="c-en">${ch.label}</span>`;
+    btn.onclick = () => checkAnswer(btn, ch);
     choicesEl.appendChild(btn);
   });
 }
 
-function checkAnswer(btn, choice, item) {
+function checkAnswer(btn, choice) {
   if (answered) return;
   answered = true;
+  playBeep('click');
 
-  const isCorrect = choice.q === item.q;
+  const isCorrect = choice.isCorrect;
   const fb = document.getElementById('feedbackEl');
 
-  // mark buttons
   document.querySelectorAll('.choice').forEach(b => {
     b.disabled = true;
     const label = b.querySelector('.c-en').textContent;
-    if (label === item.a) b.classList.add('correct');
+    if (label === currentQuestion.answer) b.classList.add('correct');
   });
 
   if (isCorrect) {
     btn.classList.add('correct');
     quizCorrect++;
+    playBeep('ok');
     fb.textContent = '✓ 正解！ Correct!';
     fb.className = 'q-feedback show ok';
   } else {
     btn.classList.add('wrong');
     quizWrong++;
-    fb.textContent = `✗ Answer: ${item.a}`;
+    playBeep('bad');
+    fb.textContent = `✗ Answer: ${currentQuestion.answer}`;
     fb.className = 'q-feedback show bad';
   }
 
