@@ -777,32 +777,20 @@ function renderCats(filter){
 
 function pickCardMode(les){
   const t=les.type||'';
-  if(t==='hiragana'||t==='katakana'){
-    // Only romaji-based modes for kana — never English words as answers
-    return Math.random()<.5?'jp2rom':'rom2jp';
-  }
-  if(t==='kanji'){
-    // Three kanji modes: meaning (English), reading (furigana), or English→Kanji
-    const r=Math.random();
-    if(r<0.40) return 'jp2eng';    // Kanji+furigana → English
-    if(r<0.70) return 'jp2hira';   // Kanji → Furigana  (Type 7)
-    return 'eng2jp';               // English → Kanji   (Type 8)
-  }
+  if(t==='hiragana'||t==='katakana') return Math.random()<.5?'jp2rom':'rom2jp';
+  if(t==='kanji') return Math.random()<.5?'jp2eng':'jp2hira';
   if(t==='vocab') return Math.random()<.5?'jp2eng':'eng2jp';
   return 'jp2eng';
 }
 
 function startLesson(les){
   CL = les;
-  const raw = shuffle(les.data).slice(0, Math.max(10, Math.min(les.data.length, 12)));
+  QQ = shuffle(les.data).slice(0, Math.max(10, Math.min(les.data.length, 12)));
   // If lesson has fewer than 10 items, repeat to fill
-  let filled = raw;
-  while(filled.length < 10){
+  while(QQ.length < 10){
     const extra = shuffle(les.data);
-    filled = [...filled, ...extra].slice(0, 10);
+    QQ = [...QQ, ...extra].slice(0, 10);
   }
-  // Pre-assign a card mode to each question so renderQ is consistent
-  QQ = filled.map(item => ({ ...item, _mode: pickCardMode(les) }));
   QI=0; QOK=0; QBAD=0; answered=false;
   document.getElementById('prog-fill').style.width='0';
   sfxStart();
@@ -816,24 +804,26 @@ function isKatakana(s){ return /^[\u30A0-\u30FF\u30FC]+$/.test(s); }
 function isRomaji(s)  { return /^[a-z]{1,4}$/.test(s); }  // syllable-only: ka, shi, tsu, kya — never English words
 
 function getDistractors(item, count, mode, les){
-  // Rule: answers must always come from the SAME lesson set (quiz pool → lesson data → same-type fallback)
-  // This ensures all 4 choices are from the same set/type, never mixing sets.
+  // Build pool: quiz set → full lesson → same-type items from FLAT_POOL (broadest fallback).
+  // Items from FLAT_POOL are tagged with _type so we only pull same-type distractors.
   const lesType    = les.type || '';
   const quizPool   = (QQ||[]).filter(x=>x.q!==item.q);
   const lessonPool = (les.data||[]).filter(x=>x.q!==item.q);
   const quizQs     = new Set(quizPool.map(x=>x.q));
-  // Broad fallback: same type from FLAT_POOL, excluding current item
+  const lesQs      = new Set(lessonPool.map(x=>x.q));
+  // Broad fallback: same type from FLAT_POOL, excluding already-included items
   const broadPool  = FLAT_POOL.filter(x=>
-    x._type===lesType && x.q!==item.q && !quizQs.has(x.q)
+    x._type===lesType && x.q!==item.q && !quizQs.has(x.q) && !lesQs.has(x.q)
   );
   const pool    = [...quizPool, ...lessonPool.filter(x=>!quizQs.has(x.q)), ...shuffle(broadPool)];
   const shuffled = shuffle(pool);
 
   if(mode==='jp2hira'){
-    // Answers are hiragana/furigana readings (hint field) — all choices must be hiragana
+    // Answers must be hiragana/furigana readings — use hint field
     const seen=new Set([item.hint||item.a]);
     return shuffled.filter(x=>{
       const h = x.hint||x.a||'';
+      // Must be a valid hiragana-style reading (contains hiragana or is short romaji-like)
       if(!h||seen.has(h)) return false;
       seen.add(h);
       return true;
@@ -841,7 +831,6 @@ function getDistractors(item, count, mode, les){
   }
 
   if(mode==='jp2rom'){
-    // Answers are romaji — all choices must be romaji
     const seen=new Set([item.a]);
     return shuffled.filter(x=>{
       if(!x.a||seen.has(x.a)) return false;
@@ -851,7 +840,6 @@ function getDistractors(item, count, mode, les){
   }
 
   if(mode==='rom2jp'){
-    // Answers are Japanese characters — all choices must be kana/kanji
     const seen=new Set([item.q]);
     return shuffled.filter(x=>{
       if(!x.q||seen.has(x.q)) return false;
@@ -860,17 +848,7 @@ function getDistractors(item, count, mode, les){
     }).slice(0,count);
   }
 
-  if(mode==='eng2jp'){
-    // Answers are Kanji/Japanese — all choices must be kanji/Japanese
-    const seen=new Set([item.q]);
-    return shuffled.filter(x=>{
-      if(!x.q||seen.has(x.q)) return false;
-      seen.add(x.q);
-      return true;
-    }).slice(0,count);
-  }
-
-  // Default (jp2eng, vocab, grammar): answers are English meanings — all choices must be English
+  /* Default for kanji / vocab / grammar — answers must be English meanings */
   const seen=new Set([item.a]);
   return shuffled.filter(x=>{
     if(!x.a||seen.has(x.a)) return false;
@@ -883,88 +861,53 @@ function renderQ(){
   answered=false;
   const item=QQ[QI];
   const total=QQ.length;
-  // Use the pre-assigned mode for this question (set in startLesson)
-  const mode = item._mode || pickCardMode(CL);
+  const mode=pickCardMode(CL);
 
   document.getElementById('q-label').textContent=`Question ${QI+1} of ${total}`;
   document.getElementById('qst-ok').textContent=`✓ ${QOK}`;
   document.getElementById('qst-bad').textContent=`✗ ${QBAD}`;
   document.getElementById('prog-fill').style.width=`${(QI/total)*100}%`;
 
-  // Card type badge labels
+  // Card type badge
   const typeName={
-    'jp2rom':  'Japanese → Romaji',
-    'rom2jp':  'Romaji → Japanese',
-    'jp2eng':  'Type 6 · Kanji + Furigana → English',
-    'eng2jp':  'Type 8 · English → Kanji',
-    'jp2hira': 'Type 7 · Kanji → Furigana'
+    'jp2rom':'Japanese → Romaji','rom2jp':'Romaji → Japanese',
+    'jp2eng':'Japanese → English','eng2jp':'English → Japanese',
+    'jp2hira':'Kanji → Reading (ひらがな)'
   }[mode]||mode;
   document.getElementById('card-type-area').innerHTML=`<div class="card-type-badge">📖 ${typeName}</div>`;
 
   // Build prompt and answer key
-  let qText='', qFuri='', promptText='', correctAnswer='', choiceType='', choiceFont='';
+  let qText='', qFuri='', promptText='', correctAnswer='', choiceType='';
   const distractors=[];
 
   if(mode==='jp2rom'){
-    // Kana/script character shown → romaji answer
-    qText=item.q;
-    promptText='What is the romaji reading?';
+    qText=item.q; promptText='What is the romaji reading?';
     correctAnswer=item.a; choiceType='romaji';
     getDistractors(item,3,mode,CL).forEach(d=>distractors.push(d.a));
-
   } else if(mode==='rom2jp'){
-    // Romaji shown → Japanese character answer
     qText=item.a; promptText='Which character is this?';
     correctAnswer=item.q; choiceType='japanese';
-    choiceFont="'Noto Serif JP',serif";
     getDistractors(item,3,mode,CL).forEach(d=>distractors.push(d.q));
-
   } else if(mode==='jp2eng'){
-    // TYPE 6: Kanji shown WITH furigana → English meaning answer
     qText=item.q;
-    // Always show furigana under kanji when answer type is NOT hiragana (Rule 7)
-    if(item.hint) qFuri=item.hint;
-    promptText='What is the meaning of this kanji?';
+    // Show furigana if it's a kanji item with a hint
+    if((CL.type==='kanji'||CL.type==='vocab') && item.hint) qFuri=item.hint;
+    promptText='What is the meaning?';
     correctAnswer=item.a; choiceType='english';
     getDistractors(item,3,'jp2eng',CL).forEach(d=>distractors.push(d.a));
-
-  } else if(mode==='jp2hira'){
-    // TYPE 7: Kanji shown → furigana/hiragana reading answer (NO furigana hint shown)
-    qText=item.q; // no furigana shown — the furigana IS the answer
-    promptText='What is the reading of this kanji? (ひらがな)';
-    correctAnswer=item.hint||item.a; choiceType='hiragana';
-    choiceFont="'Noto Serif JP',serif";
-    getDistractors(item,3,'jp2hira',CL).forEach(d=>distractors.push(d.hint||d.a));
-
   } else if(mode==='eng2jp'){
-    // TYPE 8: English meaning shown → Kanji answer; show furigana on correct kanji answer
-    qText=item.a;
-    promptText='Which kanji represents this meaning?';
-    correctAnswer=item.q; choiceType='kanji';
-    choiceFont="'Noto Serif JP',serif";
+    qText=item.a; promptText='Which Japanese word/character?';
+    correctAnswer=item.q; choiceType='japanese';
     getDistractors(item,3,mode,CL).forEach(d=>distractors.push(d.q));
+  } else if(mode==='jp2hira'){
+    qText=item.q; // kanji shown, NO furigana here since that would give away answer
+    promptText='What is the reading? (ひらがな)';
+    correctAnswer=item.hint||item.a; choiceType='hiragana';
+    getDistractors(item,3,'jp2hira',CL).forEach(d=>distractors.push(d.hint||d.a));
   }
 
-  // Pad to exactly 4 choices using fallback distractors if needed
-  // (pull from lesson data as last resort to ensure 4 choices always)
-  if(distractors.length < 3){
-    const fallback = (CL.data||[]).filter(x=>x.q!==item.q);
-    const fb = shuffle(fallback);
-    while(distractors.length < 3 && fb.length){
-      const f = fb.pop();
-      let candidate = '';
-      if(mode==='jp2hira') candidate = f.hint||f.a||'';
-      else if(mode==='jp2rom') candidate = f.a||'';
-      else if(mode==='rom2jp'||mode==='eng2jp') candidate = f.q||'';
-      else candidate = f.a||'';
-      if(candidate && !distractors.includes(candidate) && candidate!==correctAnswer){
-        distractors.push(candidate);
-      }
-    }
-  }
-
-  // Build 4 choices (correct + up to 3 distractors), shuffled
-  const allChoices = shuffle([correctAnswer, ...distractors.slice(0,3)]);
+  // Build 4 choices — broad pool fallback ensures we always have enough distractors
+  const allChoices=shuffle([correctAnswer, ...distractors.slice(0,3)]);
 
   const furiHtml = qFuri ? `<span class="furigana">${qFuri}</span>` : '';
 
@@ -981,17 +924,8 @@ function renderQ(){
   const grid=document.getElementById('choices-grid');
   allChoices.forEach(opt=>{
     const b=document.createElement('button'); b.className='choice';
-    b.dataset.value=opt; // store raw value for answer checking
     b.textContent=opt;
-    if(choiceFont) b.style.fontFamily=choiceFont;
-    // For eng2jp (Type 8), show furigana beneath each kanji choice
-    if(mode==='eng2jp'){
-      // Find the matching item for this choice to get its furigana
-      const matchItem = (CL.data||[]).find(x=>x.q===opt);
-      if(matchItem && matchItem.hint){
-        b.innerHTML=`${opt}<span style="display:block;font-family:'Source Code Pro',monospace;font-size:.65rem;color:var(--fog);font-weight:400;margin-top:.2rem">${matchItem.hint}</span>`;
-      }
-    }
+    if(choiceType==='japanese') b.style.fontFamily="'Noto Serif JP',serif";
     b.onclick=()=>checkAnswer(b, opt, correctAnswer, item);
     b.addEventListener('mouseenter',()=>sfxHover());
     grid.appendChild(b);
@@ -1003,7 +937,7 @@ function checkAnswer(btn, chosen, correct, item){
   const ok = chosen===correct;
   document.querySelectorAll('.choice').forEach(b=>{
     b.disabled=true;
-    if(b.dataset.value===correct) b.classList.add('c-right');
+    if(b.textContent===correct) b.classList.add('c-right');
   });
   const fb=document.getElementById('fb-el');
   if(ok){ btn.classList.add('c-right'); QOK++; fb.textContent='✓ 正解！ Correct!'; fb.className='q-feedback show fb-ok'; sfxCorrect(); }
